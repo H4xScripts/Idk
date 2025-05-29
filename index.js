@@ -1,5 +1,5 @@
 const express = require('express');
-const { Client, IntentsBitField, WebhookClient } = require('discord.js');
+const { Client, IntentsBitField, WebhookClient, EmbedBuilder } = require('discord.js');
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -80,10 +80,10 @@ async function ensureWebhooks(channel, channelId) {
 
 // Handle webhook POST requests
 app.post('/webhook', async (req, res) => {
-    const { Key, Executor, ExecutorLevel, GameName, GameLink, UniverseId } = req.body;
+    const { Key, Executor, ExecutorLevel, GameName, UniverseId } = req.body;
 
     // Validate incoming data
-    if (!Key || !Executor || !ExecutorLevel || !GameName || !GameLink || !UniverseId) {
+    if (!Key || !Executor || !ExecutorLevel || !GameName || !UniverseId) {
         console.error(`[${new Date().toISOString()}] Invalid webhook data received`);
         return res.status(400).json({ error: 'Invalid webhook data: Missing required fields' });
     }
@@ -115,10 +115,21 @@ app.post('/webhook', async (req, res) => {
         const randomWebhook = webhooks[Math.floor(Math.random() * webhooks.length)];
         const webhookClient = new WebhookClient({ id: randomWebhook.id, token: randomWebhook.token });
 
-        // Send plain message with format: Game: GameName[GameLink]
-        const message = `Game: ${GameName}[${GameLink}]`;
-        await webhookClient.send(message);
-        console.log(`[${new Date().toISOString()}] Message sent to channel ${channelId} via webhook ${randomWebhook.id}`);
+        // Create embed
+        const embed = new EmbedBuilder()
+            .setTitle('H4xScripts')
+            .setDescription(
+                `**Game**: [${GameName}](https://www.roblox.com/games/${UniverseId})\n` +
+                `**Key**: \`${Key}\`\n` +
+                `**Executor**: \`${Executor}\`\n` +
+                `**Executor Level**: \`${ExecutorLevel}\``
+            )
+            .setColor(0xffa500) // 16753920 in hex
+            .setFooter({ text: new Date().toISOString().slice(0, 19).replace('T', ' ') });
+
+        // Send embed via random webhook
+        await webhookClient.send({ embeds: [embed] });
+        console.log(`[${new Date().toISOString()}] Embed sent to channel ${channelId} via webhook ${randomWebhook.id}`);
 
         res.status(200).json({
             message: 'Webhook processed successfully',
