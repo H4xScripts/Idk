@@ -4,13 +4,16 @@ module.exports = {
   name: 'kick',
   description: 'Kick a user from the server',
   async execute(message, args) {
-    await message.delete();
     if (!message.member.permissions.has(PermissionsBitField.Flags.KickMembers)) {
-      return message.reply('You do not have permission to kick members.');
+      await message.reply('You do not have permission to kick members.');
+      try { await message.delete(); } catch {}
+      return;
     }
 
     if (args.length === 0) {
-      return message.reply('Usage: !kick <user mention or ID> [reason]');
+      await message.reply('Usage: !kick <user mention or ID> [reason]');
+      try { await message.delete(); } catch {}
+      return;
     }
 
     let user;
@@ -20,17 +23,23 @@ module.exports = {
       try {
         user = await message.client.users.fetch(args[0]);
       } catch {
-        return message.reply('Invalid user ID or user not found.');
+        await message.reply('Invalid user ID or user not found.');
+        try { await message.delete(); } catch {}
+        return;
       }
     }
 
     const member = message.guild.members.cache.get(user.id);
     if (!member) {
-      return message.reply('User is not in this server.');
+      await message.reply('User is not in this server.');
+      try { await message.delete(); } catch {}
+      return;
     }
 
     if (!member.kickable) {
-      return message.reply('I cannot kick this user.');
+      await message.reply('I cannot kick this user.');
+      try { await message.delete(); } catch {}
+      return;
     }
 
     const reason = args.slice(message.mentions.users.size > 0 ? 1 : 1).join(' ') || 'No reason provided';
@@ -40,7 +49,7 @@ module.exports = {
         embeds: [
           new EmbedBuilder()
             .setTitle('You have been kicked')
-            .setDescription(`**Server:** ${message.guild.name}\n**Staff:** ${メッセージ.author.tag}\n**Reason:** ${reason}`)
+            .setDescription(`**Server:** ${message.guild.name}\n**Staff:** ${message.author.tag}\n**Reason:** ${reason}`)
             .setColor(0xffa500)
             .setFooter({ text: 'discord.gg/H4xScripts' })
         ]
@@ -54,9 +63,11 @@ module.exports = {
         .setColor(0xffa500)
         .setFooter({ text: new Date().toLocaleString() });
 
-      message.channel.send({ embeds: [embed] });
+      await message.channel.send({ embeds: [embed] });
+      try { await message.delete(); } catch {}
     } catch {
-      message.reply('Failed to kick the user.');
+      await message.reply('Failed to kick the user.');
+      try { await message.delete(); } catch {}
     }
   }
 };
