@@ -12,6 +12,11 @@ const WEBHOOK_URLS = [
 
 app.use(bodyParser.json());
 
+// Function to get a random webhook URL
+function getRandomWebhook() {
+    return WEBHOOK_URLS[Math.floor(Math.random() * WEBHOOK_URLS.length)];
+}
+
 async function validateWebhook(url) {
     try {
         const response = await axios.get(url);
@@ -29,10 +34,11 @@ async function validateWebhook(url) {
 
 async function sendWebhook(url, data, retries = 3, delay = 2000) {
     try {
-        console.log(`[${new Date().toISOString()}] Sending webhook to ${url} for game: ${data.embeds[0]?.description?.match(/\*\*Game\*\*: \[(.+?)\]/)?.[1] || 'Unknown'}`);
+        console.log(`[${new Date().toISOString()}] Attempting to send to ${url} for game: ${data.embeds[0]?.description?.match(/\*\*Game\*\*: \[(.+?)\]/)?.[1] || 'Unknown'}`);
         await axios.post(url, data, {
             headers: { 'Content-Type': 'application/json' }
         });
+        console.log(`[${new Date().toISOString()}] Successfully sent to ${url}`);
     } catch (error) {
         if (error.response?.status === 429 && retries > 0) {
             const retryAfter = (error.response?.headers['x-ratelimit-reset-after'] || delay / 1000) * 1000;
@@ -56,14 +62,23 @@ app.post('/webhook', async (req, res) => {
     console.log(`[${new Date().toISOString()}] Received webhook request for game: ${gameName}`);
 
     try {
-        for (const url of WEBHOOK_URLS) {
-            await sendWebhook(url, { content, tts, embeds });
-            await new Promise(resolve => setTimeout(resolve, 2000)); // 2-second delay between webhooks
-        }
-        res.status(200).json({ message: 'Webhook forwarded successfully' });
+        // Select a random webhook URL
+        const selectedWebhook = getRandomWebhook();
+        console.log(`[${new Date().toISOString()}] Selected webhook: ${selectedWebhook}`);
+        
+        // Send to only the selected webhook
+        await sendWebhook(selectedWebhook, { content, tts, embeds });
+        
+        res.status(200).json({ 
+            message: 'Webhook forwarded successfully',
+            sent_to: selectedWebhook
+        });
     } catch (error) {
         console.error(`[${new Date().toISOString()}] Error forwarding webhook: ${error.message}`);
-        res.status(500).json({ error: 'Failed to forward webhook' });
+        res.status(500).json({ 
+            error: 'Failed to forward webhook',
+            details: error.message
+        });
     }
 });
 
