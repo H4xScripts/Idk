@@ -1,107 +1,102 @@
 const express = require('express');
-const axios = require('axios');
+const { Client, IntentsBitField, EmbedBuilder } = require('discord.js');
 const bodyParser = require('body-parser');
 
 const app = express();
 const port = process.env.PORT || 3000;
+const botToken = process.env.Bot_Token;
 
-const WEBHOOK_URLS = [
-    "https://discord.com/api/webhooks/1377615632081883276/AOzjA8MyFnsDXAhM7X8Pqdo5h0EsPnYJpJbETde34Wg2B-DZzGnKKZJv5iImE2LqViva",
-    "https://discord.com/api/webhooks/1377615635109908561/ZV4gNxP8ZXfz4ETEEcEkOtX4IkojYzvQ4fwW2c6T4i73BCYkCCB2YogagnLtt3LfTPYI"
-];
+if (!botToken) {
+    console.error(`[${new Date().toISOString()}] Bot_Token not found in environment variables`);
+    process.exit(1);
+}
+
+// Initialize Discord bot
+const client = new Client({
+    intents: [
+        IntentsBitField.Flags.Guilds,
+        IntentsBitField.Flags.GuildMessages
+    ]
+});
+
+// UniverseId to Channel ID mappings
+const UNIVERSE_TO_CHANNEL = {
+    "6161049307": "1377615632081883276", // Channel for Pixel Blade
+    "7436755782": "1377615635109908561", // Channel for Grow a Garden
+    "6022141304": "CHANNEL_ID_3", // Replace with actual channel ID
+    "7332711118": "CHANNEL_ID_4", // Replace with actual channel ID
+    "7468338447": "CHANNEL_ID_5", // Replace with actual channel ID
+    "7546582051": "CHANNEL_ID_6", // Replace with actual channel ID
+    // Add more mappings for 50-60 UniverseIds as needed
+    "default": "1377615632081883276" // Fallback channel for unmatched UniverseIds
+};
 
 app.use(bodyParser.json());
 
-// Function to get a random webhook URL
-function getRandomWebhook() {
-    return WEBHOOK_URLS[Math.floor(Math.random() * WEBHOOK_URLS.length)];
-}
+// Log when bot is ready
+client.once('ready', () => {
+    console.log(`[${new Date().toISOString()}] Discord bot logged in as ${client.user.tag}`);
+});
 
-async function validateWebhook(url) {
-    try {
-        const response = await axios.get(url);
-        if (response.status === 200) {
-            console.log(`[${new Date().toISOString()}] Validated webhook: ${url}`);
-            return true;
-        }
-        console.error(`[${new Date().toISOString()}] Invalid webhook: ${url} (Status: ${response.status})`);
-        return false;
-    } catch (error) {
-        console.error(`[${new Date().toISOString()}] Error validating webhook ${url}: ${error.message}`);
-        return false;
-    }
-}
-
-async function sendWebhook(url, data, retries = 3, delay = 2000) {
-    try {
-        console.log(`[${new Date().toISOString()}] Attempting to send to ${url} for game: ${data.embeds[0]?.description?.match(/\*\*Game\*\*: \[(.+?)\]/)?.[1] || data.embeds[0]?.description || 'Unknown'}`);
-        await axios.post(url, data, {
-            headers: { 'Content-Type': 'application/json' }
-        });
-        console.log(`[${new Date().toISOString()}] Successfully sent to ${url}`);
-    } catch (error) {
-        if (error.response?.status === 429 && retries > 0) {
-            const retryAfter = (error.response?.headers['x-ratelimit-reset-after'] || delay / 1000) * 1000;
-            console.warn(`[${new Date().toISOString()}] Rate limit hit for ${url}, retrying in ${retryAfter/1000}s (${retries} retries left). Limit: ${error.response?.headers['x-ratelimit-limit'] || 'Unknown'}, Remaining: ${error.response?.headers['x-ratelimit-remaining'] || 'Unknown'}, Reset-After: ${error.response?.headers['x-ratelimit-reset-after'] || 'Unknown'}s`);
-            await new Promise(resolve => setTimeout(resolve, retryAfter));
-            return sendWebhook(url, data, retries - 1, delay * 2);
-        }
-        throw new Error(`Failed to send webhook to ${url}: ${error.message}${error.response ? ` (Status: ${error.response.status}, Rate-Limit-Reset-After: ${error.response.headers['x-ratelimit-reset-after']}s)` : ''}`);
-    }
-}
-
+// Handle webhook POST requests
 app.post('/webhook', async (req, res) => {
-    const { Key, Executor, ExecutorLevel, GameName, GameLink } = req.body;
+    const { Key, Executor, ExecutorLevel, GameName, GameLink, UniverseId } = req.body;
 
     // Validate incoming data
-    if (!Key || !Executor || !ExecutorLevel || !GameName || !GameLink) {
+    if (!Key || !Executor || !ExecutorLevel || !GameName || !GameLink || !UniverseId) {
         console.error(`[${new Date().toISOString()}] Invalid webhook data received`);
         return res.status(400).json({ error: 'Invalid webhook data: Missing required fields' });
     }
 
-    console.log(`[${new Date().toISOString()}] Received webhook request for game: ${GameName}`);
+    console.log(`[${new Date().toISOString()}] Received webhook request for game: ${GameName} (UniverseId: ${UniverseId})`);
 
-    // Convert raw data to Discord embed format
-    const embedData = {
-        content: "",
-        tts: false,
-        embeds: [{
-            title: "H4xScripts",
-            description: `**Game**: [${GameName}](${GameLink})\n` +
-                         `**Key**: \`${Key}\`\n` +
-                         `**Executor**: \`${Executor}\`\n` +
-                         `**Executor Level**: \`${ExecutorLevel}\``,
-            color: 16753920,
-            footer: { text: new Date().toISOString().slice(0, 19).replace('T', ' ') }
-        }]
-    };
+    // Create Discord embed
+    const embed = new EmbedBuilder()
+        .setTitle('H4xScripts')
+        .setDescription(
+            `**Game**: [${GameName}](${GameLink})\n` +
+            `**Key**: \`${Key}\`\n` +
+            `**Executor**: \`${Executor}\`\n` +
+            `**Executor Level**: \`${ExecutorLevel}\`\n` +
+            `**Universe ID**: \`${UniverseId}\``
+        )
+        .setColor(0xffa500) // Orange, equivalent to 16753920
+        .setFooter({ text: new Date().toISOString().slice(0, 19).replace('T', ' ') });
 
     try {
-        // Select a random webhook URL
-        const selectedWebhook = getRandomWebhook();
-        console.log(`[${new Date().toISOString()}] Selected webhook: ${selectedWebhook}`);
-        
-        // Send the embed to the selected webhook
-        await sendWebhook(selectedWebhook, embedData);
-        
-        res.status(200).json({ 
-            message: 'Webhook forwarded successfully',
-            sent_to: selectedWebhook
+        // Get the target channel ID based on UniverseId
+        const channelId = UNIVERSE_TO_CHANNEL[UniverseId] || UNIVERSE_TO_CHANNEL["default"];
+        const channel = await client.channels.fetch(channelId);
+
+        if (!channel) {
+            console.error(`[${new Date().toISOString()}] Channel not found: ${channelId}`);
+            return res.status(500).json({ error: 'Channel not found' });
+        }
+
+        // Send the embed to the target channel
+        await channel.send({ embeds: [embed] });
+        console.log(`[${new Date().toISOString()}] Embed sent to channel: ${channelId}`);
+
+        res.status(200).json({
+            message: 'Webhook processed successfully',
+            sent_to: channelId
         });
     } catch (error) {
-        console.error(`[${new Date().toISOString()}] Error forwarding webhook: ${error.message}`);
-        res.status(500).json({ 
-            error: 'Failed to forward webhook',
+        console.error(`[${new Date().toISOString()}] Error sending to channel: ${error.message}`);
+        res.status(500).json({
+            error: 'Failed to send webhook',
             details: error.message
         });
     }
 });
 
-// Validate webhooks on startup
+// Start the Express server and log in the bot
 app.listen(port, async () => {
-    console.log(`Server running on port ${port}`);
-    console.log(`[${new Date().toISOString()}] Validating webhooks on startup...`);
-    for (const url of WEBHOOK_URLS) {
-        await validateWebhook(url);
+    console.log(`[${new Date().toISOString()}] Server running on port ${port}`);
+    try {
+        await client.login(botToken);
+    } catch (error) {
+        console.error(`[${new Date().toISOString()}] Failed to log in bot: ${error.message}`);
+        process.exit(1);
     }
 });
