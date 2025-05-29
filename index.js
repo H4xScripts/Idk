@@ -55,7 +55,6 @@ app.post('/webhook', async (req, res) => {
     const gameName = embeds[0].description?.match(/\*\*Game\*\*: \[(.+?)\]/)?.[1] || 'Unknown';
     console.log(`[${new Date().toISOString()}] Received webhook request for game: ${gameName}`);
 
-    // Validate webhooks before sending
     const validWebhooks = [];
     for (const url of WEBHOOK_URLS) {
         if (await validateWebhook(url)) {
@@ -78,7 +77,6 @@ app.post('/webhook', async (req, res) => {
     }
 });
 
-// Validate webhooks on startup
 app.listen(port, async () => {
     console.log(`Server running on port ${port}`);
     console.log(`[${new Date().toISOString()}] Validating webhooks on startup...`);
