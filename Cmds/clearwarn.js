@@ -1,8 +1,8 @@
 const fs = require('fs').promises; // Use promises for async file operations
 const path = require('path');
 
-const warnDataPath = path.join(__dirname, '..', 'Data', 'WarnData.json');
-const rolesPath = path.join(__dirname, '..', 'Data', 'Roles.json');
+const warnDataPath = '/opt/render/data/WarnData.json'; // Assumes Render disk mount
+const rolesPath = '/opt/render/data/Roles.json'; // Assumes Render disk mount
 
 async function loadWarnings() {
   try {
