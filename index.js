@@ -21,7 +21,7 @@ const client = new Client({
 
 // UniverseId to Channel ID mappings
 const UNIVERSE_TO_CHANNEL = {
-    "18172550962": "1377728605207007362", // Channel for Pixel Blade
+    "6161049307": "1377728605207007362", // Channel for Pixel Blade
     "7436755782": "1377720529603264673", // Channel for Grow a Garden
     "6022141304": "1377728540841083020", // Replace with actual channel ID
     "7332711118": "1377728632868442263", // Replace with actual channel ID
