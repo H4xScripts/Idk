@@ -34,7 +34,7 @@ async function validateWebhook(url) {
 
 async function sendWebhook(url, data, retries = 3, delay = 2000) {
     try {
-        console.log(`[${new Date().toISOString()}] Attempting to send to ${url} for game: ${data.embeds[0]?.description?.match(/\*\*Game\*\*: \[(.+?)\]/)?.[1] || 'Unknown'}`);
+        console.log(`[${new Date().toISOString()}] Attempting to send to ${url} for game: ${data.embeds[0]?.description?.match(/\*\*Game\*\*: \[(.+?)\]/)?.[1] || data.embeds[0]?.description || 'Unknown'}`);
         await axios.post(url, data, {
             headers: { 'Content-Type': 'application/json' }
         });
@@ -44,30 +44,45 @@ async function sendWebhook(url, data, retries = 3, delay = 2000) {
             const retryAfter = (error.response?.headers['x-ratelimit-reset-after'] || delay / 1000) * 1000;
             console.warn(`[${new Date().toISOString()}] Rate limit hit for ${url}, retrying in ${retryAfter/1000}s (${retries} retries left). Limit: ${error.response?.headers['x-ratelimit-limit'] || 'Unknown'}, Remaining: ${error.response?.headers['x-ratelimit-remaining'] || 'Unknown'}, Reset-After: ${error.response?.headers['x-ratelimit-reset-after'] || 'Unknown'}s`);
             await new Promise(resolve => setTimeout(resolve, retryAfter));
-            return sendWebhook(url, data, retries - 1, delay * 2); // Exponential backoff
+            return sendWebhook(url, data, retries - 1, delay * 2);
         }
         throw new Error(`Failed to send webhook to ${url}: ${error.message}${error.response ? ` (Status: ${error.response.status}, Rate-Limit-Reset-After: ${error.response.headers['x-ratelimit-reset-after']}s)` : ''}`);
     }
 }
 
 app.post('/webhook', async (req, res) => {
-    const { content, tts, embeds } = req.body;
+    const { Key, Executor, ExecutorLevel, GameName, GameLink } = req.body;
 
-    if (!embeds || !embeds[0]) {
+    // Validate incoming data
+    if (!Key || !Executor || !ExecutorLevel || !GameName || !GameLink) {
         console.error(`[${new Date().toISOString()}] Invalid webhook data received`);
-        return res.status(400).json({ error: 'Invalid webhook data' });
+        return res.status(400).json({ error: 'Invalid webhook data: Missing required fields' });
     }
 
-    const gameName = embeds[0].description?.match(/\*\*Game\*\*: \[(.+?)\]/)?.[1] || 'Unknown';
-    console.log(`[${new Date().toISOString()}] Received webhook request for game: ${gameName}`);
+    console.log(`[${new Date().toISOString()}] Received webhook request for game: ${GameName}`);
+
+    // Convert raw data to Discord embed format
+    const embedData = {
+        content: "",
+        tts: false,
+        embeds: [{
+            title: "H4xScripts",
+            description: `**Game**: [${GameName}](${GameLink})\n` +
+                         `**Key**: \`${Key}\`\n` +
+                         `**Executor**: \`${Executor}\`\n` +
+                         `**Executor Level**: \`${ExecutorLevel}\``,
+            color: 16753920,
+            footer: { text: new Date().toISOString().slice(0, 19).replace('T', ' ') }
+        }]
+    };
 
     try {
         // Select a random webhook URL
         const selectedWebhook = getRandomWebhook();
         console.log(`[${new Date().toISOString()}] Selected webhook: ${selectedWebhook}`);
         
-        // Send to only the selected webhook
-        await sendWebhook(selectedWebhook, { content, tts, embeds });
+        // Send the embed to the selected webhook
+        await sendWebhook(selectedWebhook, embedData);
         
         res.status(200).json({ 
             message: 'Webhook forwarded successfully',
