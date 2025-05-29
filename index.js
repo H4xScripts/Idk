@@ -1,6 +1,8 @@
 const express = require('express');
-const { Client, IntentsBitField, WebhookClient, EmbedBuilder } = require('discord.js');
+const { Client, IntentsBitField, WebhookClient, EmbedBuilder, Collection } = require('discord.js');
 const bodyParser = require('body-parser');
+const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -15,7 +17,8 @@ if (!botToken) {
 const client = new Client({
     intents: [
         IntentsBitField.Flags.Guilds,
-        IntentsBitField.Flags.GuildMessages
+        IntentsBitField.Flags.GuildMessages,
+        IntentsBitField.Flags.MessageContent // Added for command handling
     ]
 });
 
@@ -33,7 +36,30 @@ const UNIVERSE_TO_CHANNEL = {
 // Store webhooks for each channel (in-memory; consider a database for persistence)
 const channelWebhooks = new Map();
 
+// Command prefix
+const PREFIX = '!';
+
+// Initialize commands collection
+client.commands = new Collection();
+
 app.use(bodyParser.json());
+
+// Load commands from Cmds folder
+const commandsPath = path.join(__dirname, 'Cmds');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+    const filePath = path.join(commandsPath, file);
+    try {
+        const command = require(filePath);
+        if ('name' in command && 'execute' in command) {
+            client.commands.set(command.name, command);
+            console.log(`[${new Date().toISOString()}] Loaded command: ${command.name}`);
+        }
+    } catch (err) {
+        console.error(`[${new Date().toISOString()}] Error loading command ${file}: ${err.message}`);
+    }
+}
 
 // Log when bot is ready and initialize webhooks
 client.once('ready', async () => {
@@ -77,6 +103,25 @@ async function ensureWebhooks(channel, channelId) {
     channelWebhooks.set(channelId, webhookIds);
     console.log(`[${new Date().toISOString()}] Webhooks for channel ${channelId}: ${webhookIds.length}`);
 }
+
+// Handle Discord message commands
+client.on('messageCreate', message => {
+    if (message.author.bot) return;
+    if (!message.content.startsWith(PREFIX)) return;
+
+    const args = message.content.slice(PREFIX.length).trim().split(/ +/);
+    const commandName = args.shift().toLowerCase();
+
+    const command = client.commands.get(commandName);
+    if (!command) return;
+
+    try {
+        command.execute(message, args);
+    } catch (error) {
+        console.error(`[${new Date().toISOString()}] Error executing command ${commandName}: ${error.message}`);
+        message.reply('There was an error executing that command.');
+    }
+});
 
 // Handle webhook POST requests
 app.post('/webhook', async (req, res) => {
