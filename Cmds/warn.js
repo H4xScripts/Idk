@@ -43,14 +43,19 @@ module.exports = {
   name: 'warn',
   description: 'Warn a user by mention or user ID',
   async execute(message, args) {
-    await message.delete();
     const roleData = loadRoles();
 
     if (!hasPermission(message, roleData)) {
-      return message.reply('You do not have permission to warn members.');
+      await message.reply('You do not have permission to warn members.');
+      try { await message.delete(); } catch {}
+      return;
     }
 
-    if (!args.length) return message.reply('Please mention a user or provide their user ID.');
+    if (!args.length) {
+      await message.reply('Please mention a user or provide their user ID.');
+      try { await message.delete(); } catch {}
+      return;
+    }
 
     let user = null;
     if (message.mentions.users.size > 0) {
@@ -59,7 +64,9 @@ module.exports = {
       try {
         user = await message.client.users.fetch(args[0]);
       } catch {
-        return message.reply('Invalid user ID or user not found.');
+        await message.reply('Invalid user ID or user not found.');
+        try { await message.delete(); } catch {}
+        return;
       }
     }
 
@@ -95,7 +102,7 @@ module.exports = {
       .setFooter({ text: `Total warnings: ${totalWarnings} • ${new Date().toLocaleString()}` });
 
     await user.send({ embeds: [embed] }).catch(() => {});
-
     await message.channel.send({ content: `${user}`, embeds: [embed] });
+    try { await message.delete(); } catch {}
   }
 };
