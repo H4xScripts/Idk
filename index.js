@@ -115,8 +115,8 @@ app.post('/webhook', async (req, res) => {
         const randomWebhook = webhooks[Math.floor(Math.random() * webhooks.length)];
         const webhookClient = new WebhookClient({ id: randomWebhook.id, token: randomWebhook.token });
 
-        // Send plain message with all data except UniverseId
-        const message = `Game: ${GameName}\nLink: ${GameLink}\nKey: ${Key}\nExecutor: ${Executor}\nExecutor Level: ${ExecutorLevel}`;
+        // Send plain message with format: Game: GameName[GameLink]
+        const message = `Game: ${GameName}[${GameLink}]`;
         await webhookClient.send(message);
         console.log(`[${new Date().toISOString()}] Message sent to channel ${channelId} via webhook ${randomWebhook.id}`);
 
