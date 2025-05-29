@@ -20,13 +20,16 @@ module.exports = {
   name: 'ban',
   description: 'Ban a user and save ban reason',
   async execute(message, args) {
-    await message.delete();
     if (!message.member.permissions.has(PermissionsBitField.Flags.BanMembers)) {
-      return message.reply('You do not have permission to ban members.');
+      await message.reply('You do not have permission to ban members.');
+      try { await message.delete(); } catch {}
+      return;
     }
 
     if (args.length === 0) {
-      return message.reply('Usage: !ban <user mention or ID> [reason]');
+      await message.reply('Usage: !ban <user mention or ID> [reason]');
+      try { await message.delete(); } catch {}
+      return;
     }
 
     let user;
@@ -36,17 +39,23 @@ module.exports = {
       try {
         user = await message.client.users.fetch(args[0]);
       } catch {
-        return message.reply('Invalid user ID or user not found.');
+        await message.reply('Invalid user ID or user not found.');
+        try { await message.delete(); } catch {}
+        return;
       }
     }
 
     const member = message.guild.members.cache.get(user.id);
     if (!member) {
-      return message.reply('User is not in this server.');
+      await message.reply('User is not in this server.');
+      try { await message.delete(); } catch {}
+      return;
     }
 
     if (!member.bannable) {
-      return message.reply('I cannot ban this user.');
+      await message.reply('I cannot ban this user.');
+      try { await message.delete(); } catch {}
+      return;
     }
 
     const reason = args.slice(message.mentions.users.size > 0 ? 1 : 1).join(' ') || 'No reason provided';
@@ -82,9 +91,11 @@ module.exports = {
         .setColor(0xff0000)
         .setFooter({ text: new Date().toLocaleString() });
 
-      message.channel.send({ embeds: [embedChannel] });
+      await message.channel.send({ embeds: [embedChannel] });
+      try { await message.delete(); } catch {}
     } catch {
-      message.reply('Failed to ban the user.');
+      await message.reply('Failed to ban the user.');
+      try { await message.delete(); } catch {}
     }
   }
 };
