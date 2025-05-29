@@ -5,12 +5,10 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 3000;
 
-const RAW_WEBHOOK_URLS = [
-    "https://discord.com/api/webhooks/1377615632081883276/AOzjA8MyFnsDXAhM7X8Pqdo5h0EsPnYJpJbETde34Wg2B-DZzGnKKZJv5iImE2LqViva;",
+const WEBHOOK_URLS = [
+    "https://discord.com/api/webhooks/1377615632081883276/AOzjA8MyFnsDXAhM7X8Pqdo5h0EsPnYJpJbETde34Wg2B-DZzGnKKZJv5iImE2LqViva",
     "https://discord.com/api/webhooks/1377615635109908561/ZV4gNxP8ZXfz4ETEEcEkOtX4IkojYzvQ4fwW2c6T4i73BCYkCCB2YogagnLtt3LfTPYI"
 ];
-
-const WEBHOOK_URLS = RAW_WEBHOOK_URLS.map(url => url.trim().replace(/;$/, ''));
 
 app.use(bodyParser.json());
 
@@ -37,12 +35,12 @@ async function sendWebhook(url, data, retries = 3, delay = 2000) {
         });
     } catch (error) {
         if (error.response?.status === 429 && retries > 0) {
-            const retryAfter = error.response?.headers['x-ratelimit-reset-after'] || delay / 1000;
-            console.warn(`[${new Date().toISOString()}] Rate limit hit for ${url}, retrying in ${retryAfter}s (${retries} retries left). Limit: ${error.response?.headers['x-ratelimit-limit']}, Remaining: ${error.response?.headers['x-ratelimit-remaining']}`);
-            await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
+            const retryAfter = (error.response?.headers['x-ratelimit-reset-after'] || delay / 1000) * 1000;
+            console.warn(`[${new Date().toISOString()}] Rate limit hit for ${url}, retrying in ${retryAfter/1000}s (${retries} retries left). Limit: ${error.response?.headers['x-ratelimit-limit'] || 'Unknown'}, Remaining: ${error.response?.headers['x-ratelimit-remaining'] || 'Unknown'}, Reset-After: ${error.response?.headers['x-ratelimit-reset-after'] || 'Unknown'}s`);
+            await new Promise(resolve => setTimeout(resolve, retryAfter));
             return sendWebhook(url, data, retries - 1, delay * 2); // Exponential backoff
         }
-        throw error;
+        throw new Error(`Failed to send webhook to ${url}: ${error.message}${error.response ? ` (Status: ${error.response.status}, Rate-Limit-Reset-After: ${error.response.headers['x-ratelimit-reset-after']}s)` : ''}`);
     }
 }
 
@@ -57,28 +55,19 @@ app.post('/webhook', async (req, res) => {
     const gameName = embeds[0].description?.match(/\*\*Game\*\*: \[(.+?)\]/)?.[1] || 'Unknown';
     console.log(`[${new Date().toISOString()}] Received webhook request for game: ${gameName}`);
 
-    const validWebhooks = [];
-    for (const url of WEBHOOK_URLS) {
-        if (await validateWebhook(url)) {
-            validWebhooks.push(url);
-        }
-    }
-
-    if (validWebhooks.length === 0) {
-        console.error(`[${new Date().toISOString()}] No valid webhooks available`);
-        return res.status(500).json({ error: 'No valid webhooks available' });
-    }
-
     try {
-        const promises = validWebhooks.map(url => sendWebhook(url, { content, tts, embeds }));
-        await Promise.all(promises);
+        for (const url of WEBHOOK_URLS) {
+            await sendWebhook(url, { content, tts, embeds });
+            await new Promise(resolve => setTimeout(resolve, 2000)); // 2-second delay between webhooks
+        }
         res.status(200).json({ message: 'Webhook forwarded successfully' });
     } catch (error) {
-        console.error(`[${new Date().toISOString()}] Error forwarding webhook: ${error.message}${error.response ? ` (Status: ${error.response.status}, Rate-Limit-Reset-After: ${error.response.headers['x-ratelimit-reset-after']}s)` : ''}`);
+        console.error(`[${new Date().toISOString()}] Error forwarding webhook: ${error.message}`);
         res.status(500).json({ error: 'Failed to forward webhook' });
     }
 });
 
+// Validate webhooks on startup
 app.listen(port, async () => {
     console.log(`Server running on port ${port}`);
     console.log(`[${new Date().toISOString()}] Validating webhooks on startup...`);
