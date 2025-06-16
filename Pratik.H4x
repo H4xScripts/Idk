@@ -6,7 +6,7 @@ local MarketplaceService = game:GetService("MarketplaceService")
 _G.H4xScriptWebhookSent = false
 _G.H4xSession = _G.H4xSession or tostring(math.random(1000, 9999))
 
-local H4xValidKeys = {"NoobPratik", "WoWYouDIDIT"}
+local H4xValidKeys = {"AnyThingIwant", "AnyThingHere", "AnotherValidKey"} -- Add more valid keys here
 local ApiKey = "5108e2114475bd8262ed6a4d160e1cfc"
 
 local Scripts = {
@@ -197,15 +197,31 @@ end
 local api = loadstring(game:HttpGet("https://sdkapi-public.luarmor.net/library.lua"))()
 api.script_id = ApiKey
 
+-- Check script_key if defined
+if script_key and currentGameConfig then
+    if table.find(H4xValidKeys, script_key) then
+        saveKey(script_key)
+        _G.H4xScriptKey = "Loaded"
+        coroutine.wrap(function() sendKeyWebhook(script_key) end)()
+        local startTime = tick()
+        loadstring(game:HttpGet(currentGameConfig.script_url))()
+        return
+    elseif #script_key == 32 then
+        local startTime = tick()
+        local status = api.check_key(script_key)
+        if status and type(status) == "table" and status.code == "KEY_VALID" then
+            saveKey(script_key)
+            _G.H4xScriptKey = "Loaded"
+            coroutine.wrap(function() sendKeyWebhook(script_key) end)()
+            startTime = tick()
+            loadstring(game:HttpGet(currentGameConfig.script_url))()
+            return
+        end
+    end
+end
+
 local savedKey = loadKey()
-if table.find(H4xValidKeys, savedKey) and currentGameConfig then
-    saveKey(savedKey)
-    _G.H4xScriptKey = "Loaded"
-    coroutine.wrap(function() sendKeyWebhook(savedKey) end)()
-    local startTime = tick()
-    loadstring(game:HttpGet(currentGameConfig.script_url))()
-    return
-elseif savedKey and #savedKey == 32 and currentGameConfig then
+if savedKey and #savedKey == 32 and currentGameConfig then
     local startTime = tick()
     local status = api.check_key(savedKey)
     if status and type(status) == "table" and status.code == "KEY_VALID" then
@@ -264,7 +280,18 @@ Tabs.Main:AddInput("KeyInput", {
 Tabs.Main:AddButton({
     Title = "Check Key",
     Callback = function()
-        if table.find(H4xValidKeys, savedKey) then
+        if #savedKey ~= 32 then
+            Fluent:Notify({Title = "Invalid Key", Content = "Key must be exactly 32 characters", Duration = 5})
+            return
+        end
+        local startTime = tick()
+        local status = api.check_key(savedKey)
+        if not status or type(status) ~= "table" then
+            deleteKey()
+            Fluent:Notify({Title = "API Error", Content = "Failed to validate key", Duration = 8})
+            return
+        end
+        if status.code == "KEY_VALID" then
             saveKey(savedKey)
             _G.H4xScriptKey = "Loaded"
             coroutine.wrap(function() sendKeyWebhook(savedKey) end)()
@@ -275,32 +302,9 @@ Tabs.Main:AddButton({
             else
                 Fluent:Notify({Title = "No Script Available", Content = "This game is not supported.", Duration = 6})
             end
-        elseif #savedKey ~= 32 then
-            Fluent:Notify({Title = "Invalid Key", Content = "Key must be exactly 32 characters", Duration = 5})
-            return
         else
-            local startTime = tick()
-            local status = api.check_key(savedKey)
-            if not status or type(status) ~= "table" then
-                deleteKey()
-                Fluent:Notify({Title = "API Error", Content = "Failed to validate key", Duration = 8})
-                return
-            end
-            if status.code == "KEY_VALID" then
-                saveKey(savedKey)
-                _G.H4xScriptKey = "Loaded"
-                coroutine.wrap(function() sendKeyWebhook(savedKey) end)()
-                Window:Destroy()
-                if currentGameConfig then
-                    local startTime = tick()
-                    loadstring(game:HttpGet(currentGameConfig.script_url))()
-                else
-                    Fluent:Notify({Title = "No Script Available", Content = "This game is not supported.", Duration = 6})
-                end
-            else
-                deleteKey()
-                Fluent:Notify({Title = "Invalid Key", Content = status.message or "Key validation failed", Duration = 6})
-            end
+            deleteKey()
+            Fluent:Notify({Title = "Invalid Key", Content = status.message or "Key validation failed", Duration = 6})
         end
     end
 })
