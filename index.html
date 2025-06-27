@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anti-Bypass Protection</title>
+</head>
+<body>
+    <h1>Welcome to Our Page</h1>
+    <p id="message">Loading...</p>
+
+    <script>
+        // Configuration
+        const authToken = '12cfd687bc39171533f0eb5b0d9bbf708412cb62502693cb8b15ca39d81777c9'; // Replace with your Linkvertise authentication token
+        const apiEndpoint = 'https://publisher.linkvertise.com/api/v1/anti_bypassing';
+        const requestLink = 'https://yourlink.com/request'; // Replace with your request link
+
+        // Function to get URL parameter
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // Function to check hash with Linkvertise API
+        async function verifyHash() {
+            const hash = getUrlParameter('hash');
+            const messageElement = document.getElementById('message');
+
+            if (!hash) {
+                messageElement.textContent = 'No hash found. You may have bypassed the link.';
+                setTimeout(() => {
+                    window.location.href = requestLink;
+                }, 2000);
+                return;
+            }
+
+            if (hash.length !== 64) {
+                messageElement.textContent = 'Invalid hash format. You may have bypassed the link.';
+                setTimeout(() => {
+                    window.location.href = requestLink;
+                }, 2000);
+                return;
+            }
+
+            try {
+                const response = await fetch(apiEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `token=${encodeURIComponent(authToken)}&hash=${encodeURIComponent(hash)}`
+                });
+
+                const result = await response.json();
+
+                if (result === true) {
+                    messageElement.textContent = 'Access granted. Welcome!';
+                } else {
+                    messageElement.textContent = 'Invalid or bypassed link detected. Redirecting...';
+                    setTimeout(() => {
+                        window.location.href = requestLink;
+                    }, 2000);
+                }
+            } catch (error) {
+                messageElement.textContent = 'Error verifying link. Redirecting...';
+                setTimeout(() => {
+                    window.location.href = requestLink;
+                }, 2000);
+            }
+        }
+
+        // Run verification on page load
+        verifyHash();
+    </script>
+</body>
+</html>
