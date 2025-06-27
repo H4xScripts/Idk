@@ -7,13 +7,14 @@
 </head>
 <body>
     <h1>Welcome to Our Page</h1>
-    <p id="message">Loading...</p>
+    <p id="message">Verifying access...</p>
 
     <script>
         // Configuration
-        const authToken = '2c81b11fe4995e4e9bfa398fdd88e139022006ac6c110cd0e54bab85f57dbced'; // Replace with your Linkvertise authentication token
+        const authToken = '2c81b11fe4995e4e9bfa398fdd88e139022006ac6c110cd0e54bab85f57dbced'; // Your provided Linkvertise authentication token
         const apiEndpoint = 'https://publisher.linkvertise.com/api/v1/anti_bypassing';
-        const requestLink = 'https://yourlink.com/request'; // Replace with your request link
+        const requestLink = 'https://yourlink.com/request'; // Replace with your actual request link
+        const maxRetries = 1; // Number of retries for API call
 
         // Function to get URL parameter
         function getUrlParameter(name) {
@@ -21,13 +22,15 @@
             return urlParams.get(name);
         }
 
-        // Function to check hash with Linkvertise API
-        async function verifyHash() {
+        // Function to verify hash with Linkvertise API
+        async function verifyHash(retryCount = 0) {
             const hash = getUrlParameter('hash');
             const messageElement = document.getElementById('message');
 
+            // Check if hash exists and is valid
             if (!hash) {
-                messageElement.textContent = 'No hash found. You may have bypassed the link.';
+                console.error('No hash parameter found in URL');
+                messageElement.textContent = 'Error: No hash found. You may have bypassed the link.';
                 setTimeout(() => {
                     window.location.href = requestLink;
                 }, 2000);
@@ -35,7 +38,8 @@
             }
 
             if (hash.length !== 64) {
-                messageElement.textContent = 'Invalid hash format. You may have bypassed the link.';
+                console.error('Invalid hash length:', hash.length);
+                messageElement.textContent = 'Error: Invalid hash format. You may have bypassed the link.';
                 setTimeout(() => {
                     window.location.href = requestLink;
                 }, 2000);
@@ -51,21 +55,47 @@
                     body: `token=${encodeURIComponent(authToken)}&hash=${encodeURIComponent(hash)}`
                 });
 
-                const result = await response.json();
+                const text = await response.text();
+                let result;
+                try {
+                    result = JSON.parse(text);
+                } catch (e) {
+                    console.error('Failed to parse API response:', text);
+                    result = text;
+                }
 
                 if (result === true) {
+                    console.log('Hash verification successful');
                     messageElement.textContent = 'Access granted. Welcome!';
+                } else if (result === 'Invalid token.') {
+                    console.error('API response: Invalid token');
+                    messageElement.textContent = 'Error: Invalid authentication token. Redirecting...';
+                    setTimeout(() => {
+                        window.location.href = requestLink;
+                    }, 2000);
                 } else {
-                    messageElement.textContent = 'Invalid or bypassed link detected. Redirecting...';
+                    console.error('API response: Invalid hash or other error', result);
+                    if (retryCount < maxRetries) {
+                        console.log(`Retrying API call (${retryCount + 1}/${maxRetries})...`);
+                        setTimeout(() => verifyHash(retryCount + 1), 1000);
+                    } else {
+                        messageElement.textContent = 'Error: Invalid or bypassed link detected. Redirecting...';
+                        setTimeout(() => {
+                            window.location.href = requestLink;
+                        }, 2000);
+                    }
+                }
+            } catch (error) {
+                console.error('API request failed:', error.message);
+                if (retryCount < maxRetries) {
+                    console.log(`Retrying API call (${retryCount + 1}/${maxRetries})...`);
+                    setTimeout(() => verifyHash(retryCount + 1), 1000);
+                } else {
+                    messageElement.textContent = 'Error: Unable to verify link. Redirecting...';
                     setTimeout(() => {
                         window.location.href = requestLink;
                     }, 2000);
                 }
-            } catch (error) {
-                messageElement.textContent = 'Error verifying link. Redirecting...';
-                setTimeout(() => {
-                    window.location.href = requestLink;
-                }, 2000);
             }
         }
 
