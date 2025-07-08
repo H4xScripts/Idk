@@ -77,11 +77,11 @@
                         </div>
                         <div class="terminal-body">
                             <div class="code-line">
-                                <span class="prompt">loadstring(game:HttpGet("</span><span class="url">https://raw.githubusercontent.com/h4xscripts/main/loader.lua</span><span class="prompt">"))()</span>
+                                <span class="prompt">loadstring(game:HttpGet(</span><span class="string">"https://raw.githubusercontent.com/h4xscripts/main/loader.lua"</span><span class="prompt">))()</span>
                             </div>
                         </div>
                     </div>
-                    <div class="copy-button">
+                    <div class="copy-button" onclick="copyScript()">
                         <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                             <path d="M8 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-3M8 3a2 2 0 012-2h2a2 2 0 012 2M8 3a2 2 0 012 2h2a2 2 0 01-2-2"/>
                         </svg>
@@ -99,7 +99,7 @@
                         <div class="key-label">Authentication Key</div>
                         <div class="key-value">h4xscriptsontop</div>
                     </div>
-                    <div class="copy-button">
+                    <div class="copy-button" onclick="copyKey()">
                         <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                             <path d="M8 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-3M8 3a2 2 0 012-2h2a2 2 0 012 2M8 3a2 2 0 012 2h2a2 2 0 01-2-2"/>
                         </svg>
@@ -158,7 +158,7 @@
             </div>
 
             <!-- Discord Button -->
-            <div class="discord-button">
+            <div class="discord-button" onclick="joinDiscord()">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                     <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
                 </svg>
@@ -334,5 +334,42 @@
             </div>
         </div>
     </div>
+
+    <script>
+        function copyScript() {
+            const scriptText = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/h4xscripts/main/loader.lua"))()';
+            navigator.clipboard.writeText(scriptText).then(function() {
+                // Show success feedback
+                const button = event.target.closest('.copy-button');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 6L9 17l-5-5"/></svg>Copied!';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Failed to copy script: ', err);
+            });
+        }
+
+        function copyKey() {
+            const keyText = 'h4xscriptsontop';
+            navigator.clipboard.writeText(keyText).then(function() {
+                // Show success feedback
+                const button = event.target.closest('.copy-button');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 6L9 17l-5-5"/></svg>Copied!';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Failed to copy key: ', err);
+            });
+        }
+
+        function joinDiscord() {
+            // Replace with your actual Discord invite link
+            window.open('https://discord.gg/your-invite-link', '_blank');
+        }
+    </script>
 </body>
 </html>
