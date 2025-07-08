@@ -1,17 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"> 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>H4x Scripts - Professional Scripting Hub</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1 class="title">H4x Scripts</h1>
+            <div class="logo-container">
+                <img src="./png/h4x-logo.png" alt="H4x Scripts Logo" class="logo">
+                <h1 class="title">H4x Scripts</h1>
+            </div>
             <div class="header-badges">
                 <div class="version-badge">v1.0</div>
                 <div class="status-badge">
@@ -22,25 +25,15 @@
         </div>
 
         <!-- Subtitle -->
-        <p class="subtitle">Professional Roblox script hub with advanced features and reliable performance</p>
+        <p class="subtitle">Professional scripting hub with advanced features and reliable performance</p>
 
         <!-- Get Started Section -->
         <div class="get-started-section">
-            <div class="section-header">
-                <div class="section-icon">
-                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                        <path d="M8 5v14l11-7z"/>
-                    </svg>
-                </div>
-                <h2 class="section-title">Get Started</h2>
-                <div class="premium-badge">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                        <path d="M12 1L9 9H1l6.5 5L5 23l7-5 7 5-2.5-9L23 9h-8z"/>
-                    </svg>
-                    Premium Access
-                </div>
+            <div class="section-icon">
+                <img src="./png/h4x-logo.png" alt="H4x Logo" class="section-logo">
             </div>
-            <p class="section-description">Copy the script and key to start using H4x Scripts Hub.</p>
+            <h2 class="section-title">Get Started</h2>
+            <p class="section-description">Copy and paste into your executor</p>
 
             <!-- Tabs -->
             <div class="tabs">
@@ -62,7 +55,7 @@
                     </label>
                 </div>
 
-                <!-- Script Tab Content -->
+                <!-- Tab Content -->
                 <div class="tab-content script-content">
                     <div class="terminal">
                         <div class="terminal-header">
@@ -79,19 +72,18 @@
                         </div>
                         <div class="terminal-body">
                             <div class="code-line">
-                                <span class="prompt">loadstring(game:HttpGet(</span><span class="string">"https://raw.githubusercontent.com/h4xscripts/main/loader.lua"</span><span class="prompt">))()</span>
+                                <span class="function">loadstring</span><span class="punctuation">(</span><span class="object">game</span><span class="punctuation">:</span><span class="method">HttpGet</span><span class="punctuation">(</span><span class="string">"https://raw.githubusercontent.com/h4xscripts/main/loader.lua"</span><span class="punctuation">))()</span>
                             </div>
                         </div>
                     </div>
-                    <button class="copy-button" onclick="copyScript()">
+                    <div class="copy-button" onclick="copyScript()">
                         <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                             <path d="M8 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-3M8 3a2 2 0 012-2h2a2 2 0 012 2M8 3a2 2 0 012 2h2a2 2 0 01-2-2"/>
                         </svg>
                         Copy Script
-                    </button>
+                    </div>
                 </div>
 
-                <!-- Key Tab Content -->
                 <div class="tab-content key-content">
                     <div class="key-display">
                         <div class="key-icon">
@@ -102,12 +94,12 @@
                         <div class="key-label">Authentication Key</div>
                         <div class="key-value">h4xscriptsontop</div>
                     </div>
-                    <button class="copy-button" onclick="copyKey()">
+                    <div class="copy-button" onclick="copyKey()">
                         <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                             <path d="M8 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-3M8 3a2 2 0 012-2h2a2 2 0 012 2M8 3a2 2 0 012 2h2a2 2 0 01-2-2"/>
                         </svg>
                         Copy Key
-                    </button>
+                    </div>
                 </div>
             </div>
 
@@ -122,19 +114,19 @@
 
         <!-- Community Section -->
         <div class="community-section">
-            <div class="section-header">
-                <div class="section-icon">
-                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+            <div class="section-icon">
+                <div class="icon-circle">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                         <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
                     </svg>
                 </div>
-                <h2 class="section-title">Join Our Community</h2>
-                <div class="elite-badge">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                        <path d="M16 4l4 4-4 4M8 20l-4-4 4-4"/>
-                    </svg>
-                    Elite Community
-                </div>
+            </div>
+            <h2 class="section-title">Join Our Community</h2>
+            <div class="elite-badge">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <path d="M16 4l4 4-4 4M8 20l-4-4 4-4"/>
+                </svg>
+                Elite Community
             </div>
             <p class="section-description">Connect with other users and get support on our Discord server</p>
 
@@ -161,7 +153,7 @@
             </div>
 
             <!-- Discord Button -->
-            <button class="discord-button" onclick="joinDiscord()">
+            <div class="discord-button" onclick="joinDiscord()">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                     <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
                 </svg>
@@ -169,26 +161,26 @@
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
                     <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/>
                 </svg>
-            </button>
+            </div>
         </div>
 
         <!-- Supported Games Section -->
         <div class="games-section">
-            <div class="section-header">
-                <div class="section-icon">
-                    <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+            <div class="section-icon">
+                <div class="icon-circle">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                         <path d="M6 12a2 2 0 104 0 2 2 0 00-4 0zM14 12a2 2 0 104 0 2 2 0 00-4 0z"/>
                     </svg>
                 </div>
-                <h2 class="section-title">Supported Games</h2>
-                <div class="premium-badge">
-                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
-                        <path d="M12 1L9 9H1l6.5 5L5 23l7-5 7 5-2.5-9L23 9h-8z"/>
-                    </svg>
-                    Premium Scripts
-                </div>
             </div>
-            <p class="section-description">High-quality scripts for popular Roblox games with regular updates and premium features.</p>
+            <h2 class="section-title">Supported Games</h2>
+            <div class="premium-badge">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                    <path d="M12 1L9 9H1l6.5 5L5 23l7-5 7 5-2.5-9L23 9h-8z"/>
+                </svg>
+                Premium Scripts
+            </div>
+            <p class="section-description">High-quality scripts for popular Roblox games with regular updates and premium features</p>
 
             <!-- Games Grid -->
             <div class="games-grid">
@@ -220,7 +212,7 @@
                     <p class="game-description">Strategy empire building experience</p>
                     <div class="game-tags">
                         <span class="tag strategy">Strategy</span>
-                        <span class="tag premium">Premium</span>
+                        <span class="tag new">New</span>
                     </div>
                     <div class="game-status">
                         <span class="status-dot supported"></span>
@@ -238,7 +230,7 @@
                     <p class="game-description">Master the art of saber combat</p>
                     <div class="game-tags">
                         <span class="tag simulator">Simulator</span>
-                        <span class="tag admin">Admin</span>
+                        <span class="tag active">Active</span>
                     </div>
                     <div class="game-status">
                         <span class="status-dot supported"></span>
@@ -256,7 +248,7 @@
                     <p class="game-description">Explore dark mystical realms</p>
                     <div class="game-tags">
                         <span class="tag rpg">RPG</span>
-                        <span class="tag admin">Admin</span>
+                        <span class="tag action">Action</span>
                     </div>
                     <div class="game-status">
                         <span class="status-dot supported"></span>
@@ -274,7 +266,7 @@
                     <p class="game-description">Intense block-based combat</p>
                     <div class="game-tags">
                         <span class="tag action">Action</span>
-                        <span class="tag admin">Admin</span>
+                        <span class="tag active">Active</span>
                     </div>
                     <div class="game-status">
                         <span class="status-dot supported"></span>
@@ -289,7 +281,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>H4x Scripts</h3>
-                    <p>Professional Roblox scripting platform since 2025</p>
+                    <p>Professional Roblox scripting platform since 2023</p>
                 </div>
                 <div class="footer-stats">
                     <div class="footer-stat">
@@ -297,8 +289,8 @@
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                         </svg>
                         <div>
-                            <div class="stat-value">Online</div>
-                            <div class="stat-label">Status</div>
+                            <div class="stat-label">Online</div>
+                            <div class="stat-value">24/7</div>
                         </div>
                     </div>
                     <div class="footer-stat">
@@ -306,8 +298,8 @@
                             <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
                         </svg>
                         <div>
-                            <div class="stat-value">v1.0</div>
-                            <div class="stat-label">Version</div>
+                            <div class="stat-label">v1.0</div>
+                            <div class="stat-value">Latest</div>
                         </div>
                     </div>
                     <div class="footer-stat">
@@ -315,107 +307,64 @@
                             <path d="M8 3v3a2 2 0 01-2 2H3m18 0h-3a2 2 0 01-2-2V3m0 18v-3a2 2 0 012-2h3M3 16h3a2 2 0 012 2v3"/>
                         </svg>
                         <div>
-                            <div class="stat-value">5 Games</div>
-                            <div class="stat-label">Supported</div>
+                            <div class="stat-label">5 Games</div>
+                            <div class="stat-value">Supported</div>
                         </div>
                     </div>
                     <div class="footer-stat">
                         <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5.09 13.36L12 13.1l-5.09 2.26a.5.5 0 01-.68-.64l1.23-5.61L3.3 5.65a.5.5 0 01.28-.85l5.74-.84L12 1.51l2.68 2.45 5.74.84a.5.5 0 01.28.85l-4.16 3.46 1.23 5.61a.5.5 0 01-.68.64z"/>
+                            <path d="M8 3v3a2 2 0 01-2 2H3m18 0h-3a2 2 0 01-2-2V3m0 18v-3a2 2 0 012-2h3M3 16h3a2 2 0 012 2v3"/>
                         </svg>
                         <div>
-                            <div class="stat-value">2025</div>
-                            <div class="stat-label">Since</div>
+                            <div class="stat-label">2025</div>
+                            <div class="stat-value">Year</div>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="footer-bottom">
+                <p>Made with ❤️ for the Roblox community</p>
+                <p>© 2025 H4x Scripts. All rights reserved.</p>
+                <p>Use responsibly and follow Roblox Terms of Service</p>
             </div>
         </div>
     </div>
 
     <script>
-        // Copy Script Function
         function copyScript() {
-            const scriptText = `loadstring(game:HttpGet("https://raw.githubusercontent.com/h4xscripts/main/loader.lua"))()`;
-            
-            // Copy to clipboard
+            const scriptText = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/h4xscripts/main/loader.lua"))()';
             navigator.clipboard.writeText(scriptText).then(function() {
                 // Show success feedback
-                showCopyFeedback('Script copied to clipboard!');
+                const button = event.target.closest('.copy-button');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 6L9 17l-5-5"/></svg>Copied!';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                }, 2000);
             }).catch(function(err) {
                 console.error('Failed to copy script: ', err);
             });
         }
 
-        // Copy Key Function
         function copyKey() {
             const keyText = 'h4xscriptsontop';
-            
-            // Copy to clipboard
             navigator.clipboard.writeText(keyText).then(function() {
                 // Show success feedback
-                showCopyFeedback('Key copied to clipboard!');
+                const button = event.target.closest('.copy-button');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M20 6L9 17l-5-5"/></svg>Copied!';
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                }, 2000);
             }).catch(function(err) {
                 console.error('Failed to copy key: ', err);
             });
         }
 
-        // Discord Redirect Function
         function joinDiscord() {
             // Replace with your actual Discord invite link
-            window.open('https://discord.gg/h4xscripts', '_blank');
+            window.open('https://discord.gg/your-invite-link', '_blank');
         }
-
-        // Copy Feedback Function
-        function showCopyFeedback(message) {
-            // Create feedback element
-            const feedback = document.createElement('div');
-            feedback.textContent = message;
-            feedback.style.position = 'fixed';
-            feedback.style.top = '20px';
-            feedback.style.right = '20px';
-            feedback.style.background = '#10b981';
-            feedback.style.color = '#ffffff';
-            feedback.style.padding = '12px 16px';
-            feedback.style.borderRadius = '8px';
-            feedback.style.fontSize = '14px';
-            feedback.style.fontWeight = '500';
-            feedback.style.zIndex = '9999';
-            feedback.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
-            feedback.style.opacity = '0';
-            feedback.style.transform = 'translateY(-10px)';
-            feedback.style.transition = 'all 0.3s ease';
-            
-            document.body.appendChild(feedback);
-            
-            // Animate in
-            requestAnimationFrame(() => {
-                feedback.style.opacity = '1';
-                feedback.style.transform = 'translateY(0)';
-            });
-            
-            // Remove after 3 seconds
-            setTimeout(() => {
-                feedback.style.opacity = '0';
-                feedback.style.transform = 'translateY(-10px)';
-                setTimeout(() => {
-                    document.body.removeChild(feedback);
-                }, 300);
-            }, 3000);
-        }
-
-        // Add smooth scrolling for better user experience
-        document.addEventListener('DOMContentLoaded', function() {
-            // Smooth scrolling for any anchor links
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                });
-            });
-        });
     </script>
 </body>
 </html>
