@@ -1,3 +1,4 @@
+/* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -6,14 +7,15 @@
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #000000;
+    background: #0a0a0a;
     color: #ffffff;
-    line-height: 1.4;
+    line-height: 1.6;
     min-height: 100vh;
+    overflow-x: hidden;
 }
 
 .container {
-    max-width: 680px;
+    max-width: 720px;
     margin: 0 auto;
     padding: 40px 20px;
 }
@@ -23,25 +25,14 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 16px;
-}
-
-.logo-container {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.logo {
-    width: 64px;
-    height: 64px;
-    object-fit: contain;
+    margin-bottom: 20px;
 }
 
 .title {
     font-size: 48px;
-    font-weight: 700;
+    font-weight: 800;
     color: #ffffff;
+    letter-spacing: -0.02em;
 }
 
 .header-badges {
@@ -49,40 +40,33 @@ body {
     gap: 8px;
 }
 
-.version-badge {
-    background: #1f1f1f;
-    color: #888;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
+.version-badge, .status-badge {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
     font-weight: 500;
-    border: 1px solid #333;
+    color: #888;
 }
 
 .status-badge {
     display: flex;
     align-items: center;
-    gap: 6px;
-    background: #1f1f1f;
-    color: #888;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 500;
-    border: 1px solid #333;
+    gap: 8px;
 }
 
 .status-dot {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #00ff00;
+    background: #10b981;
     animation: pulse 2s infinite;
 }
 
 @keyframes pulse {
     0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    50% { opacity: 0.6; }
 }
 
 /* Subtitle */
@@ -96,10 +80,16 @@ body {
 
 /* Section Base */
 .get-started-section, .community-section, .games-section {
-    background: #111111;
-    border: 1px solid #333;
-    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
     padding: 32px;
+    margin-bottom: 32px;
+    backdrop-filter: blur(10px);
+}
+
+.section-header {
+    text-align: center;
     margin-bottom: 24px;
 }
 
@@ -109,43 +99,32 @@ body {
     margin-bottom: 16px;
 }
 
-.icon-circle {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #2a2a2a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-}
-
-.section-logo {
-    width: 72px;
-    height: 72px;
-    object-fit: contain;
+.section-icon svg {
+    width: 24px;
+    height: 24px;
+    color: #888;
 }
 
 .section-title {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 700;
-    text-align: center;
-    margin-bottom: 8px;
     color: #ffffff;
+    margin-bottom: 8px;
 }
 
 .premium-badge, .elite-badge {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 8px;
     color: #888;
     font-size: 14px;
-    margin-bottom: 8px;
+    font-weight: 500;
 }
 
 .premium-badge svg, .elite-badge svg {
-    color: #888;
+    width: 16px;
+    height: 16px;
 }
 
 .section-description {
@@ -172,8 +151,8 @@ body {
 }
 
 .tab {
-    background: #2a2a2a;
-    border: 1px solid #444;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     padding: 12px 20px;
     color: #888;
@@ -183,20 +162,24 @@ body {
     gap: 8px;
     font-size: 14px;
     font-weight: 500;
-    transition: all 0.2s;
+    transition: all 0.2s ease;
 }
 
 .tab:hover {
-    background: #333;
-    border-color: #555;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
 }
 
-/* Active tab styling */
 #script-tab:checked ~ .tab-labels label[for="script-tab"],
 #key-tab:checked ~ .tab-labels label[for="key-tab"] {
     background: #ffffff;
-    color: #000;
+    color: #000000;
     border-color: #ffffff;
+}
+
+.tab svg {
+    width: 16px;
+    height: 16px;
 }
 
 /* Tab Content */
@@ -204,31 +187,27 @@ body {
     display: none;
 }
 
-/* Show content based on selected tab */
-#script-tab:checked ~ .script-content {
-    display: block;
-}
-
+#script-tab:checked ~ .script-content,
 #key-tab:checked ~ .key-content {
     display: block;
 }
 
 /* Terminal */
 .terminal {
-    background: #000000;
-    border: 1px solid #333;
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
-    overflow: hidden;
     margin-bottom: 16px;
+    overflow: hidden;
 }
 
 .terminal-header {
-    background: #1a1a1a;
+    background: #0f0f0f;
     padding: 12px 16px;
-    border-bottom: 1px solid #333;
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .terminal-controls {
@@ -247,90 +226,89 @@ body {
 .control.green { background: #27ca3f; }
 
 .terminal-title {
-    color: #888;
     font-size: 13px;
-    font-family: 'Monaco', 'Menlo', monospace;
+    font-weight: 500;
+    color: #ffffff;
 }
 
 .terminal-status {
     display: flex;
     align-items: center;
-    gap: 6px;
-    color: #888;
+    gap: 8px;
     font-size: 12px;
+    color: #888;
+}
+
+.terminal-status .status-dot {
+    width: 6px;
+    height: 6px;
 }
 
 .terminal-status .status-dot.active {
-    background: #00ff00;
+    background: #10b981;
 }
 
 .terminal-body {
     padding: 16px;
-    font-family: 'Monaco', 'Menlo', monospace;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
     font-size: 14px;
+    line-height: 1.4;
 }
 
 .code-line {
-    color: #d4d4d4;
+    color: #ffffff;
 }
 
-.code-line .function {
-    color: #dcdcaa;
+.prompt {
+    color: #ffffff;
 }
 
-.code-line .object {
-    color: #9cdcfe;
-}
-
-.code-line .method {
-    color: #dcdcaa;
-}
-
-.code-line .punctuation {
-    color: #d4d4d4;
-}
-
-.code-line .string {
-    color: #ce9178;
-}
-
-.url {
-    color: #ce9178;
+.string {
+    color: #10b981;
 }
 
 /* Key Display */
 .key-display {
     text-align: center;
     padding: 32px;
-    background: #000000;
-    border: 1px solid #333;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     margin-bottom: 16px;
 }
 
 .key-icon {
-    color: #888;
     margin-bottom: 16px;
+    color: #888;
+}
+
+.key-icon svg {
+    width: 48px;
+    height: 48px;
 }
 
 .key-label {
-    color: #888;
     font-size: 14px;
-    margin-bottom: 16px;
+    color: #888;
+    margin-bottom: 8px;
 }
 
 .key-value {
-    color: #ffffff;
-    font-size: 24px;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+    font-size: 18px;
     font-weight: 600;
-    font-family: 'Monaco', 'Menlo', monospace;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 12px 16px;
+    border-radius: 6px;
+    display: inline-block;
 }
 
 /* Copy Button */
 .copy-button {
     width: 100%;
-    background: #f0f0f0;
-    color: #000;
+    background: #ffffff;
+    color: #000000;
     border: none;
     border-radius: 8px;
     padding: 12px;
@@ -341,16 +319,20 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: all 0.2s;
-    user-select: none;
+    transition: all 0.2s ease;
 }
 
 .copy-button:hover {
-    background: #e0e0e0;
+    background: #f0f0f0;
 }
 
 .copy-button:active {
     transform: scale(0.98);
+}
+
+.copy-button svg {
+    width: 16px;
+    height: 16px;
 }
 
 /* Security Notice */
@@ -358,9 +340,9 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 16px;
-    background: #1a1a1a;
-    border: 1px solid #333;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     margin-top: 16px;
     color: #888;
@@ -368,7 +350,8 @@ body {
 }
 
 .security-notice svg {
-    color: #888;
+    width: 20px;
+    height: 20px;
     flex-shrink: 0;
 }
 
@@ -381,35 +364,40 @@ body {
 }
 
 .stat-card {
-    background: #000000;
-    border: 1px solid #333;
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
     padding: 24px;
     text-align: center;
 }
 
 .stat-icon {
     color: #888;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
+}
+
+.stat-icon svg {
+    width: 32px;
+    height: 32px;
 }
 
 .stat-number {
-    font-size: 32px;
+    font-size: 24px;
     font-weight: 700;
     color: #ffffff;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
 .stat-label {
-    color: #888;
     font-size: 14px;
+    color: #888;
 }
 
 /* Discord Button */
 .discord-button {
     width: 100%;
-    background: #f0f0f0;
-    color: #000;
+    background: #ffffff;
+    color: #000000;
     border: none;
     border-radius: 8px;
     padding: 12px;
@@ -420,17 +408,20 @@ body {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: all 0.2s;
-    text-decoration: none;
-    user-select: none;
+    transition: all 0.2s ease;
 }
 
 .discord-button:hover {
-    background: #e0e0e0;
+    background: #f0f0f0;
 }
 
 .discord-button:active {
     transform: scale(0.98);
+}
+
+.discord-button svg {
+    width: 16px;
+    height: 16px;
 }
 
 /* Games Grid */
@@ -442,10 +433,16 @@ body {
 }
 
 .game-card {
-    background: #000000;
-    border: 1px solid #333;
-    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
     padding: 20px;
+    transition: all 0.2s ease;
+}
+
+.game-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
 }
 
 .game-header {
@@ -462,6 +459,8 @@ body {
 }
 
 .game-header svg {
+    width: 20px;
+    height: 20px;
     color: #888;
 }
 
@@ -474,7 +473,7 @@ body {
 .game-tags {
     display: flex;
     gap: 8px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
     flex-wrap: wrap;
 }
 
@@ -483,16 +482,16 @@ body {
     border-radius: 4px;
     font-size: 12px;
     font-weight: 500;
+    color: #ffffff;
 }
 
-.tag.tycoon { background: #4338ca; color: #fff; }
-.tag.strategy { background: #0369a1; color: #fff; }
-.tag.simulator { background: #ea580c; color: #fff; }
-.tag.rpg { background: #dc2626; color: #fff; }
-.tag.action { background: #059669; color: #fff; }
-.tag.premium { background: #d97706; color: #fff; }
-.tag.new { background: #16a34a; color: #fff; }
-.tag.active { background: #16a34a; color: #fff; }
+.tag.tycoon { background: #6366f1; }
+.tag.strategy { background: #3b82f6; }
+.tag.simulator { background: #f59e0b; }
+.tag.rpg { background: #ef4444; }
+.tag.action { background: #10b981; }
+.tag.premium { background: #8b5cf6; }
+.tag.admin { background: #f97316; }
 
 .game-status {
     display: flex;
@@ -502,17 +501,22 @@ body {
     font-size: 14px;
 }
 
-.status-dot.supported {
-    background: #16a34a;
+.game-status .status-dot {
+    width: 8px;
+    height: 8px;
+}
+
+.game-status .status-dot.supported {
+    background: #10b981;
 }
 
 /* Footer */
 .footer {
-    background: #111111;
-    border: 1px solid #333;
-    border-radius: 12px;
-    padding: 24px;
-    margin-top: 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 32px;
+    margin-top: 32px;
 }
 
 .footer-content {
@@ -547,6 +551,8 @@ body {
 }
 
 .footer-stat svg {
+    width: 24px;
+    height: 24px;
     color: #888;
 }
 
@@ -555,27 +561,15 @@ body {
     flex-direction: column;
 }
 
-.stat-label {
-    color: #888;
-    font-size: 12px;
-}
-
 .stat-value {
     color: #ffffff;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 600;
 }
 
-.footer-bottom {
-    text-align: center;
-    padding-top: 24px;
-    border-top: 1px solid #333;
+.stat-label {
     color: #888;
     font-size: 12px;
-}
-
-.footer-bottom p {
-    margin-bottom: 4px;
 }
 
 /* Responsive Design */
@@ -583,75 +577,41 @@ body {
     .container {
         padding: 20px 16px;
     }
-    
+
     .header {
         flex-direction: column;
         gap: 16px;
+        text-align: center;
     }
-    
-    .logo-container {
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    .logo {
-        width: 48px;
-        height: 48px;
-    }
-    
+
     .title {
         font-size: 36px;
-        text-align: center;
     }
-    
-    .header-badges {
-        justify-content: center;
-    }
-    
-    .stats-grid {
+
+    .games-grid {
         grid-template-columns: 1fr;
     }
-    
-    .games-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
+
     .footer-content {
         grid-template-columns: 1fr;
-        text-align: center;
+        gap: 24px;
     }
-    
+
     .footer-stats {
         grid-template-columns: 1fr;
-    }
-    
-    .tabs {
-        flex-direction: column;
-    }
-    
-    .tab {
-        justify-content: center;
     }
 }
 
 @media (max-width: 480px) {
-    .container {
-        padding: 16px 12px;
+    .tab-labels {
+        flex-direction: column;
     }
-    
-    .get-started-section, .community-section, .games-section {
-        padding: 24px 16px;
-    }
-    
-    .title {
-        font-size: 32px;
-    }
-    
-    .section-title {
-        font-size: 28px;
-    }
-    
-    .games-grid {
+
+    .stats-grid {
         grid-template-columns: 1fr;
+    }
+
+    .section-title {
+        font-size: 24px;
     }
 }
