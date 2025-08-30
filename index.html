@@ -1,9 +1,11 @@
+-- made with ai :skull:
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>H4X Scripts Hub</title>
+    <title>H4X Scripts</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
@@ -54,6 +56,9 @@
         .button-glow:hover {
             box-shadow: 0 0 12px rgba(91, 33, 182, 0.7);
         }
+        .modal-container {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
     </style>
 </head>
 <body class="bg-gray-950 min-h-screen flex items-center justify-center font-sans text-gray-100 p-4">
@@ -75,7 +80,6 @@
 
         <!-- Script Loader Section -->
         <div class="bg-gray-900 p-8 rounded-2xl shadow-2xl space-y-6 card-hover">
-            <div id="toast-container"></div>
             <div class="space-y-2">
                 <div class="flex items-center justify-center space-x-3">
                     <h2 class="text-3xl font-semibold text-white" data-testid="text-launch-title">Launch Now</h2>
@@ -95,10 +99,7 @@
                 </div>
                 <div class="relative bg-gray-800 rounded-lg p-2">
                     <pre class="text-left font-mono text-gray-300 text-sm overflow-x-auto whitespace-pre-wrap break-words">
-                        <code class="language-lua">
-                            loadstring(game:HttpGet("https://raw.githubusercontent.com/H4xScripts/Loader/main/loader.lua"))()
-                        </code>
-                    </pre>
+<code class="language-lua" id="script-code"> loadstring(game:HttpGet('https://raw.githubusercontent.com/H4xScripts/Loader/main/loader.lua'))()</code></pre>
                     <button id="copy-script-btn" class="absolute right-2 top-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-2 px-4 rounded-full transition-all duration-200 z-10 font-normal text-[12px] text-justify ml-[9px] mr-[9px] mt-[20px] mb-[20px] pt-[2px] pb-[2px] pl-[10px] pr-[10px]" data-testid="button-copy-script">
                         Copy
                     </button>
@@ -112,6 +113,7 @@
             </div>
         </div>
 
+        <!-- Access Keys Section -->
         <div class="bg-gray-900 p-8 rounded-2xl shadow-2xl space-y-8 animate-glow card-hover">
             <div class="space-y-2">
                 <h2 class="text-3xl font-bold text-center text-white">Access Keys</h2>
@@ -178,7 +180,7 @@
                     </div>
                     <div class="text-center w-full">
                         <p class="mt-4 text-center text-xl font-bold text-gray-300">800 Robux</p>
-                        <button id="buy-key-btn" class="w-full text-white font-bold py-3 px-8 rounded-full button-glow inline-block text-center" style="background: linear-gradient(45deg, #F59E0B, #DC2626);">
+                        <button id="open-modal-btn" class="w-full text-white font-bold py-3 px-8 rounded-full button-glow inline-block text-center" style="background: linear-gradient(45deg, #F59E0B, #DC2626);">
                             Buy Key
                         </button>
                     </div>
@@ -207,7 +209,7 @@
     </div>
 
     <!-- Robux Verification Modal -->
-    <div id="robux-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 hidden">
+    <div id="robux-modal" class="modal-container hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 opacity-0 transition-opacity duration-300">
         <div class="modal-content p-8 max-w-md w-full relative bg-gray-900 rounded-xl shadow-lg border border-gray-700">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-2xl font-bold text-white">Robux Key Verification</h3>
@@ -217,7 +219,8 @@
                     </svg>
                 </button>
             </div>
-            
+
+            <!-- Modal Content (to be manipulated by JS) -->
             <div id="modal-input-state" class="space-y-6">
                 <div class="text-center space-y-2">
                     <div class="flex items-center justify-center space-x-2 mb-4">
@@ -233,10 +236,12 @@
                 </div>
                 <div class="space-y-4">
                     <div>
-                        <label for="robloxUsername" class="block text-sm font-medium text-gray-300 mb-2">Roblox Username</label>
+                        <label for="robloxUsername" class="block text-sm font-medium text-gray-300 mb-2">
+                            Roblox Username
+                        </label>
                         <input type="text" id="robloxUsername" placeholder="Enter your Roblox username" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"/>
                     </div>
-                    <button id="verify-purchase-btn" class="w-full text-white font-bold py-3 px-6 rounded-full button-glow transition-all duration-200" style="background: linear-gradient(90deg, #8B5CF6, #EC4899); box-shadow: 0 0 15px rgba(139, 92, 246, 0.5), 0 0 10px rgba(236, 72, 153, 0.5);">
+                    <button id="verify-btn" class="w-full text-white font-bold py-3 px-6 rounded-full button-glow disabled:opacity-50 transition-all duration-200" style="background: linear-gradient(90deg, #8B5CF6, #EC4899); box-shadow: 0 0 15px rgba(139, 92, 246, 0.5), 0 0 10px rgba(236, 72, 153, 0.5);">
                         Verify Purchase
                     </button>
                 </div>
@@ -247,17 +252,17 @@
                 </div>
             </div>
 
-            <div id="modal-loading-state" class="space-y-6 text-center hidden">
+            <div id="modal-loading-state" class="hidden space-y-6 text-center">
                 <div class="flex items-center justify-center space-x-3 text-white">
                     <div class="w-8 h-8 rounded-full border-4 border-t-purple-500 animate-spin"></div>
                     <span class="text-gray-300">Verifying gamepass purchase...</span>
                 </div>
                 <p class="text-sm text-gray-400">
-                    Checking ownership of gamepass for <span class="text-purple-400 font-medium" id="loading-username"></span>
+                    Checking ownership of gamepass for <span id="loading-username" class="text-purple-400 font-medium"></span>
                 </p>
             </div>
 
-            <div id="modal-success-state" class="space-y-6 hidden">
+            <div id="modal-success-state" class="hidden space-y-6">
                 <div class="bg-green-900/50 border border-green-600 p-6 rounded-xl text-center space-y-4">
                     <div class="flex items-center justify-center space-x-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400">
@@ -266,13 +271,13 @@
                         <span class="text-xl font-bold text-white">Verification Successful!</span>
                     </div>
                     <p class="text-green-200 text-sm">
-                        Gamepass ownership confirmed for <span class="font-medium" id="success-username"></span>
+                        Gamepass ownership confirmed for <span id="success-username" class="font-medium"></span>
                     </p>
                 </div>
                 <div class="space-y-3">
                     <label class="block text-sm font-medium text-gray-300">Your Lifetime Key:</label>
                     <div class="bg-gray-800 p-4 rounded-lg flex items-center justify-between">
-                        <span class="text-purple-400 break-all" id="success-key"></span>
+                        <span id="generated-key" class="text-purple-400 break-all"></span>
                         <button id="copy-key-btn" class="text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-gray-700">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2" />
@@ -286,18 +291,18 @@
                 </div>
             </div>
 
-            <div id="modal-error-state" class="space-y-6 hidden">
+            <div id="modal-error-state" class="hidden space-y-6">
                 <div class="bg-red-900/50 border border-red-600 p-6 rounded-xl text-center space-y-4">
                     <div class="flex items-center justify-center space-x-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10" />
                             <path d="M15 9l-6 6M9 9l6 6" />
                         </svg>
                         <span class="text-xl font-bold text-white">Verification Failed</span>
                     </div>
                     <div class="text-red-200 text-sm space-y-2">
-                        <p>Couldn't verify gamepass purchase for <span class="font-medium" id="error-username"></span></p>
-                        <p class="text-xs" id="error-message"></p>
+                        <p>Couldn't verify gamepass purchase for <span id="error-username" class="font-medium"></span></p>
+                        <p id="error-message" class="text-xs"></p>
                     </div>
                 </div>
                 <div class="space-y-4">
@@ -306,7 +311,7 @@
                             Try Again
                         </button>
                         <span class="text-gray-600">|</span>
-                        <button id="join-discord-btn" class="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors">
+                        <button id="discord-btn" class="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors">
                             Join Discord
                         </button>
                     </div>
@@ -314,23 +319,23 @@
                 </div>
             </div>
 
-            <div id="modal-existing-state" class="space-y-6 hidden">
+            <div id="modal-existing-state" class="hidden space-y-6">
                 <div class="bg-blue-900/50 border border-blue-600 p-6 rounded-xl text-center space-y-4">
                     <div class="flex items-center justify-center space-x-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10" />
                             <path d="M12 16v-4M12 8h.01" />
                         </svg>
                         <span class="text-xl font-bold text-white">Already Verified</span>
                     </div>
                     <p class="text-blue-200 text-sm">
-                        Account <span class="font-medium" id="existing-username"></span> is already verified with an existing key.
+                        Account <span id="existing-username" class="font-medium"></span> is already verified with an existing key.
                     </p>
                 </div>
                 <div class="space-y-3">
                     <label class="block text-sm font-medium text-gray-300">Your Existing Key:</label>
                     <div class="bg-gray-800 p-4 rounded-lg flex items-center justify-between">
-                        <span class="text-purple-400 break-all" id="existing-key"></span>
+                        <span id="existing-key" class="text-purple-400 break-all"></span>
                         <button id="copy-existing-key-btn" class="text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-gray-700">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2" />
@@ -343,8 +348,12 @@
                     </p>
                 </div>
             </div>
+
         </div>
     </div>
+
+    <!-- Toast Component -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-[60] opacity-0 transition-opacity duration-300 pointer-events-none"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -356,81 +365,93 @@
         const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        let userId = null;
-        let isAuthReady = false;
-
-        const checkAuthStatus = async () => {
+        // Firebase Initialization
+        let db, auth, userId;
+        async function initializeFirebase() {
             try {
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
                 if (initialAuthToken) {
                     await signInWithCustomToken(auth, initialAuthToken);
                 } else {
                     await signInAnonymously(auth);
                 }
                 userId = auth.currentUser?.uid || crypto.randomUUID();
-                isAuthReady = true;
-                console.log("Firebase initialized and user signed in:", userId);
+                console.log("Firebase initialized and user authenticated:", userId);
             } catch (error) {
-                console.error("Firebase authentication failed:", error);
-                isAuthReady = true;
+                console.error("Firebase initialization failed:", error);
             }
-        };
+        }
 
-        // --- Toast Functionality ---
-        function showToast(title, description, isDestructive = false) {
-            const toastContainer = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `fixed bottom-4 right-4 p-4 rounded-lg shadow-lg text-white z-[60] transition-all duration-300 ${isDestructive ? 'bg-red-500' : 'bg-gray-800'}`;
-            toast.innerHTML = `
-                <div class="font-bold">${title}</div>
-                <div>${description}</div>
+        // Simple Toast Functionality
+        const toastContainer = document.getElementById('toast-container');
+        function showToast(title, description, isError = false) {
+            toastContainer.innerHTML = `
+                <div class="p-4 rounded-lg shadow-lg text-white ${isError ? 'bg-red-500' : 'bg-gray-800'}">
+                    <div class="font-bold">${title}</div>
+                    <div>${description}</div>
+                </div>
             `;
-            toastContainer.appendChild(toast);
+            toastContainer.style.opacity = '1';
+            toastContainer.style.pointerEvents = 'auto';
+
             setTimeout(() => {
-                toast.remove();
+                toastContainer.style.opacity = '0';
+                toastContainer.style.pointerEvents = 'none';
             }, 3000);
         }
 
-        // --- Robux Verification Modal Logic ---
+        // Modal State Management
         const modal = document.getElementById('robux-modal');
-        const buyKeyBtn = document.getElementById('buy-key-btn');
-        const closeModalBtn = document.getElementById('close-modal-btn');
-        const verifyPurchaseBtn = document.getElementById('verify-purchase-btn');
-        const robloxUsernameInput = document.getElementById('robloxUsername');
-        const copyKeyBtn = document.getElementById('copy-key-btn');
-        const retryBtn = document.getElementById('retry-btn');
-        const joinDiscordBtn = document.getElementById('join-discord-btn');
-        
         const states = {
             input: document.getElementById('modal-input-state'),
             loading: document.getElementById('modal-loading-state'),
             success: document.getElementById('modal-success-state'),
             error: document.getElementById('modal-error-state'),
-            existing: document.getElementById('modal-existing-state')
+            existing: document.getElementById('modal-existing-state'),
         };
-        let currentModalState = 'input';
+        const robloxUsernameInput = document.getElementById('robloxUsername');
+        const loadingUsernameSpan = document.getElementById('loading-username');
+        const successUsernameSpan = document.getElementById('success-username');
+        const errorUsernameSpan = document.getElementById('error-username');
+        const existingUsernameSpan = document.getElementById('existing-username');
+        const generatedKeySpan = document.getElementById('generated-key');
+        const existingKeySpan = document.getElementById('existing-key');
+        const errorMessageDiv = document.getElementById('error-message');
+        const verifyBtn = document.getElementById('verify-btn');
+        const copyScriptBtn = document.getElementById('copy-script-btn');
+        const scriptCodeElement = document.getElementById('script-code');
 
         function setModalState(state) {
             Object.values(states).forEach(el => el.classList.add('hidden'));
-            states[state].classList.remove('hidden');
-            currentModalState = state;
+            if (states[state]) {
+                states[state].classList.remove('hidden');
+            }
         }
 
-        function handleOpenModal() {
-            setModalState('input');
-            robloxUsernameInput.value = '';
+        function openModal() {
             modal.classList.remove('hidden');
+            setTimeout(() => modal.style.opacity = '1', 10);
+            setModalState('input');
         }
 
-        function handleCloseModal() {
-            modal.classList.add('hidden');
+        function closeModal() {
+            modal.style.opacity = '0';
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                robloxUsernameInput.value = '';
+                // Reset to input state when closing
+                setModalState('input');
+            }, 300);
         }
 
-        async function handleVerify() {
+        // Event Listeners
+        document.getElementById('open-modal-btn').addEventListener('click', openModal);
+        document.getElementById('close-modal-btn').addEventListener('click', closeModal);
+
+        verifyBtn.addEventListener('click', async () => {
             const username = robloxUsernameInput.value.trim();
             if (!username) {
                 showToast("Username required", "Please enter your Roblox username", true);
@@ -438,58 +459,38 @@
             }
 
             setModalState('loading');
-            document.getElementById('loading-username').textContent = username;
+            loadingUsernameSpan.textContent = username;
 
-            // Simulate a brief loading period
+            // Simulate loading
             await new Promise(resolve => setTimeout(resolve, 1500));
 
-            // The new behavior: always fail and prompt user to join Discord
-            const errorMessage = "This is broken. Please join Discord and show a screenshot of proof of your purchase in a ticket. You will receive your key ASAP.";
-            document.getElementById('error-username').textContent = username;
-            document.getElementById('error-message').textContent = errorMessage;
+            // Hardcoded error state as per the original component's logic
+            errorMessageDiv.textContent = "This is broken. Please join Discord and show a screenshot of proof of your purchase in a ticket. You will receive your key ASAP.";
+            errorUsernameSpan.textContent = username;
             setModalState('error');
-        }
+        });
 
-        function handleRetry() {
+        document.getElementById('retry-btn').addEventListener('click', () => {
             setModalState('input');
-        }
+        });
 
-        function handleCopyKey() {
-            const keyToCopy = document.getElementById('success-key').textContent || document.getElementById('existing-key').textContent;
-            navigator.clipboard.writeText(keyToCopy)
-                .then(() => showToast("Copied!", "Key copied to clipboard"))
-                .catch(() => showToast("Copy failed", "Please try again", true));
-        }
+        document.getElementById('discord-btn').addEventListener('click', () => {
+            window.open('https://discord.gg/H4xScripts', '_blank');
+        });
 
-        // --- Script Loader Logic ---
-        const copyScriptBtn = document.getElementById('copy-script-btn');
-        const scriptCode = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/H4xScripts/Loader/main/loader.lua"))()';
-
-        function handleCopyScript() {
-            navigator.clipboard.writeText(scriptCode)
-                .then(() => showToast("Copied!", "Script copied to clipboard"))
-                .catch(() => showToast("Copy failed", "Please try again", true));
-        }
-
-        // --- Event Listeners ---
-        window.onload = async function() {
-            await checkAuthStatus();
-
-            buyKeyBtn.addEventListener('click', handleOpenModal);
-            closeModalBtn.addEventListener('click', handleCloseModal);
-            verifyPurchaseBtn.addEventListener('click', handleVerify);
-            retryBtn.addEventListener('click', handleRetry);
-            joinDiscordBtn.addEventListener('click', () => {
-                window.open('https://discord.gg/H4xScripts', '_blank');
-            });
-            copyScriptBtn.addEventListener('click', handleCopyScript);
-            
-            // Re-assign listener to the new copy button in case of state change
-            if (copyKeyBtn) {
-                copyKeyBtn.addEventListener('click', handleCopyKey);
+        copyScriptBtn.addEventListener('click', async () => {
+            try {
+                const textToCopy = scriptCodeElement.textContent.trim();
+                await navigator.clipboard.writeText(textToCopy);
+                showToast("Copied!", "Script copied to clipboard");
+            } catch (err) {
+                console.error("Copy failed:", err);
+                showToast("Copy failed", "Please try again", true);
             }
-        };
+        });
 
+        // Window load
+        window.addEventListener('load', () => {
+            initializeFirebase();
+        });
     </script>
-</body>
-</html>
