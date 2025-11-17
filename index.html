@@ -103,6 +103,30 @@
             letter-spacing: 2px;
         }
         
+        .error-title {
+            font-size: 32px;
+            color: #ff0040;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .error-msg {
+            font-size: 18px;
+            color: #c0a0a8;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .warning {
+            font-size: 14px;
+            color: #ff4466;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255,0,64,0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255,0,64,0.3);
+        }
+        
         .key-label {
             font-size: 18px;
             color: #c0a0a8;
@@ -224,6 +248,10 @@
             font-weight: bold;
         }
         
+        .hidden {
+            display: none;
+        }
+        
         @media (max-width: 768px) {
             .container {
                 padding: 40px 30px;
@@ -236,6 +264,14 @@
             
             .logo {
                 font-size: 32px;
+            }
+            
+            .error-title {
+                font-size: 26px;
+            }
+            
+            .error-msg {
+                font-size: 16px;
             }
             
             .key-display {
@@ -270,6 +306,14 @@
                 font-size: 28px;
             }
             
+            .error-title {
+                font-size: 22px;
+            }
+            
+            .error-msg {
+                font-size: 14px;
+            }
+            
             .key-display {
                 font-size: 16px;
                 padding: 18px 12px;
@@ -289,50 +333,62 @@
         <span>Key has been copied!</span>
     </div>
     
-    <div class="container">
+    <div class="container" id="errorContainer" class="hidden">
+        <img src="https://yt3.googleusercontent.com/sc9mp1SFwUvGjRtg0AwWsaNBG1pU9j-5671aDTETsLf0TynZ0t9AfqOpq_YdYxpbUI_8EMT-3g=s160-c-k-c0x00ffffff-no-rj" alt="H4xScript" class="logo-img">
+        <div class="logo">H4xScript</div>
+        <div class="error-title">Failed To Authenticate</div>
+        <div class="error-msg">Access denied. Invalid referrer source detected.</div>
+        <div class="warning">⚠️ Trying to bypass will lead to permanent ban</div>
+    </div>
+    
+    <div class="container hidden" id="keyContainer">
         <img src="https://yt3.googleusercontent.com/sc9mp1SFwUvGjRtg0AwWsaNBG1pU9j-5671aDTETsLf0TynZ0t9AfqOpq_YdYxpbUI_8EMT-3g=s160-c-k-c0x00ffffff-no-rj" alt="H4xScript" class="logo-img">
         <div class="logo">H4xScript</div>
         <div class="key-label">Your Key:</div>
-        <div class="key-display" id="keyDisplay"></div>
+        <div class="key-display" id="keyDisplay">Loading...</div>
         <button class="copy-btn" onclick="copyKey()">Copy Key</button>
     </div>
 
     <script>
-        function generateKey() {
-            const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            const lower = 'abcdefghijklmnopqrstuvwxyz';
-            const nums = '0123456789';
-            const allChars = lower + nums;
-            
-            let key = upper.charAt(Math.floor(Math.random() * upper.length));
-            
-            const capitalPositions = new Set();
-            while (capitalPositions.size < 3) {
-                const pos = Math.floor(Math.random() * 15) + 1;
-                capitalPositions.add(pos);
+        let key = '';
+        const referrer = document.referrer;
+        
+        function checkReferrer() {
+            if (referrer.includes('linkvertise.com')) {
+                return true;
             }
-            
-            for (let i = 1; i < 16; i++) {
-                if (capitalPositions.has(i)) {
-                    key += upper.charAt(Math.floor(Math.random() * upper.length));
-                } else {
-                    key += allChars.charAt(Math.floor(Math.random() * allChars.length));
-                }
-            }
-            return key;
+            return false;
         }
 
-        const key = generateKey();
-        document.getElementById('keyDisplay').textContent = key;
+        async function fetchKey() {
+            try {
+                const response = await fetch('https://pastebin.com/raw/amPziV1y');
+                key = await response.text();
+                key = key.trim();
+                document.getElementById('keyDisplay').textContent = key;
+            } catch (error) {
+                document.getElementById('keyDisplay').textContent = 'Error loading key';
+                console.error('Error fetching key:', error);
+            }
+        }
 
         function copyKey() {
-            navigator.clipboard.writeText(key).then(() => {
-                const notification = document.getElementById('notification');
-                notification.classList.add('show');
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 3000);
-            });
+            if (key) {
+                navigator.clipboard.writeText(key).then(() => {
+                    const notification = document.getElementById('notification');
+                    notification.classList.add('show');
+                    setTimeout(() => {
+                        notification.classList.remove('show');
+                    }, 3000);
+                });
+            }
+        }
+
+        if (checkReferrer()) {
+            document.getElementById('keyContainer').classList.remove('hidden');
+            fetchKey();
+        } else {
+            document.getElementById('errorContainer').classList.remove('hidden');
         }
     </script>
 </body>
