@@ -333,7 +333,7 @@
         <span>Key has been copied!</span>
     </div>
     
-    <div class="container" id="errorContainer" class="hidden">
+    <div class="container hidden" id="errorContainer">
         <img src="https://yt3.googleusercontent.com/sc9mp1SFwUvGjRtg0AwWsaNBG1pU9j-5671aDTETsLf0TynZ0t9AfqOpq_YdYxpbUI_8EMT-3g=s160-c-k-c0x00ffffff-no-rj" alt="H4xScript" class="logo-img">
         <div class="logo">H4xScript</div>
         <div class="error-title">Failed To Authenticate</div>
@@ -354,6 +354,9 @@
         const referrer = document.referrer;
         
         function checkReferrer() {
+            // For testing, temporarily allow if no referrer (comment out for production)
+            // if (!referrer) return true;
+            
             if (referrer.includes('linkvertise.com')) {
                 return true;
             }
@@ -362,7 +365,7 @@
 
         async function fetchKey() {
             try {
-                const response = await fetch('https://pastebin.com/raw/amPziV1y');
+                const response = await fetch('https://api.allorigins.win/raw?url=https://pastebin.com/raw/amPziV1y');
                 key = await response.text();
                 key = key.trim();
                 document.getElementById('keyDisplay').textContent = key;
