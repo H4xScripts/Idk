@@ -350,7 +350,10 @@
     </div>
 
     <script>
-        let key = '';
+        // Change your key here
+        const API_KEY = "Xa3k9mP2nQ7r5tYv";
+        
+        let key = API_KEY;
         const referrer = document.referrer;
         
         function checkReferrer() {
@@ -363,16 +366,8 @@
             return false;
         }
 
-        async function fetchKey() {
-            try {
-                const response = await fetch('https://api.allorigins.win/raw?url=https://pastebin.com/raw/amPziV1y');
-                key = await response.text();
-                key = key.trim();
-                document.getElementById('keyDisplay').textContent = key;
-            } catch (error) {
-                document.getElementById('keyDisplay').textContent = 'Error loading key';
-                console.error('Error fetching key:', error);
-            }
+        function displayKey() {
+            document.getElementById('keyDisplay').textContent = key;
         }
 
         function copyKey() {
@@ -389,9 +384,14 @@
 
         if (checkReferrer()) {
             document.getElementById('keyContainer').classList.remove('hidden');
-            fetchKey();
+            displayKey();
         } else {
             document.getElementById('errorContainer').classList.remove('hidden');
+        }
+        
+        // For Lua scripts to access
+        window.getKey = function() {
+            return API_KEY;
         }
     </script>
 </body>
