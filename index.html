@@ -1,496 +1,339 @@
-<!-- Maade with ai lol me no html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>H4X Scripts</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>H4xScript - Key Generator</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0A0C14 0%, #121420 100%);
-            color: #D1D5DB;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .animate-pulse-slow {
-            animation: pulse 3s ease-in-out infinite;
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
-        .animate-glow {
-            animation: glow 2s ease-in-out infinite alternate;
-        }
+        
         @keyframes glow {
-            from { box-shadow: 0 0 8px rgba(91, 33, 182, 0.4); }
-            to { box-shadow: 0 0 16px rgba(91, 33, 182, 0.7); }
+            0%, 100% { box-shadow: 0 0 5px #ff0040, 0 0 10px #ff0040, 0 0 15px #ff0040; }
+            50% { box-shadow: 0 0 10px #ff0040, 0 0 20px #ff0040, 0 0 30px #ff0040; }
         }
-        .card-hover {
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
-        .card-hover:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 24px rgba(91, 33, 182, 0.5);
-        }
-        .button-glow {
-            transition: all 0.3s ease;
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0f 50%, #150a12 100%);
+            background-size: 200% 200%;
+            animation: gradient 15s ease infinite;
+            padding: 20px;
             position: relative;
             overflow: hidden;
         }
-        .button-glow::before {
+        
+        body::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: -100%;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,0,64,0.15) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: float 20s linear infinite;
+            pointer-events: none;
+        }
+        
+        .container {
+            background: rgba(20, 10, 15, 0.9);
+            padding: 50px 60px;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8), 0 0 40px rgba(255,0,64,0.2);
+            text-align: center;
+            border: 2px solid rgba(255,0,64,0.3);
+            backdrop-filter: blur(10px);
+            animation: slideIn 0.6s ease-out;
+            max-width: 600px;
             width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: 0.5s;
+            position: relative;
+            z-index: 1;
         }
-        .button-glow:hover::before {
-            left: 100%;
+        
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            box-shadow: 0 0 20px rgba(255,0,64,0.4);
+            animation: float 3s ease-in-out infinite;
         }
-        .button-glow:hover {
-            box-shadow: 0 0 12px rgba(91, 33, 182, 0.7);
+        
+        .logo {
+            font-size: 42px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff0040, #ff4466, #ff0040);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+            animation: gradient 3s ease infinite;
+            text-shadow: 0 0 30px rgba(255,0,64,0.5);
+            letter-spacing: 2px;
         }
-        .modal-container {
-            transition: opacity 0.3s ease, visibility 0.3s ease;
+        
+        .key-label {
+            font-size: 18px;
+            color: #c0a0a8;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        
+        .key-display {
+            font-size: 24px;
+            font-family: 'Courier New', monospace;
+            color: #ff0040;
+            background: #0f0a0d;
+            padding: 25px 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            letter-spacing: 3px;
+            border: 2px solid #2d1a22;
+            text-shadow: 0 0 10px rgba(255, 0, 64, 0.5);
+            animation: glow 2s ease-in-out infinite;
+            word-break: break-all;
+            transition: transform 0.3s;
+        }
+        
+        .key-display:hover {
+            transform: scale(1.02);
+        }
+        
+        .copy-btn {
+            background: linear-gradient(135deg, #ff0040 0%, #cc0033 100%);
+            color: #ffffff;
+            border: none;
+            padding: 16px 50px;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .copy-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .copy-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .copy-btn:hover {
+            background: linear-gradient(135deg, #ff1a55 0%, #e60039 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255, 0, 64, 0.5);
+        }
+        
+        .copy-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .notification {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #1a0a0f 0%, #2d1a22 100%);
+            color: #ff4466;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 20px rgba(255,0,64,0.3);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: 600;
+            font-size: 16px;
+            border: 2px solid rgba(255,0,64,0.3);
+            z-index: 1000;
+            transition: top 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        .notification.show {
+            top: 30px;
+        }
+        
+        .checkmark {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #ff0040;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: scaleIn 0.3s ease-out;
+        }
+        
+        @keyframes scaleIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .checkmark::after {
+            content: '✓';
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 30px;
+            }
+            
+            .logo-img {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .logo {
+                font-size: 32px;
+            }
+            
+            .key-display {
+                font-size: 18px;
+                padding: 20px 15px;
+                letter-spacing: 2px;
+            }
+            
+            .copy-btn {
+                padding: 14px 40px;
+                font-size: 14px;
+            }
+            
+            .notification {
+                padding: 15px 20px;
+                font-size: 14px;
+                max-width: 90%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .logo-img {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .logo {
+                font-size: 28px;
+            }
+            
+            .key-display {
+                font-size: 16px;
+                padding: 18px 12px;
+                letter-spacing: 1px;
+            }
+            
+            .copy-btn {
+                padding: 12px 35px;
+                font-size: 13px;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-950 min-h-screen flex items-center justify-center font-sans text-gray-100 p-4">
-
-    <div class="max-w-5xl mx-auto space-y-12 text-center">
-        <div class="space-y-5 animate-pulse-slow">
-            <img src="https://yt3.ggpht.com/sc9mp1SFwUvGjRtg0AwWsaNBG1pU9j-5671aDTETsLf0TynZ0t9AfqOpq_YdYxpbUI_8EMT-3g=s88-c-k-c0x00ffffff-no-rj" alt="H4X Scripts Logo" class="h-24 w-24 sm:h-32 sm:w-32 mx-auto rounded-full shadow-lg border-2 border-purple-600"/>
-            <div class="flex items-center justify-center space-x-4 text-gray-300 font-medium">
-                <span class="bg-gray-900 py-1 px-3 rounded-full text-xs border border-purple-600">v1.0.2</span>
-                <span class="flex items-center space-x-1">
-                    <span class="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
-                    <span class="text-xs">Online</span>
-                </span>
-            </div>
-            <p class="text-lg text-gray-400 max-w-3xl mx-auto">
-                Elevate your Roblox experience with our premium script hub, crafted for power and precision.
-            </p>
-        </div>
-
-        <!-- Script Loader Section -->
-        <div class="bg-gray-900 p-8 rounded-2xl shadow-2xl space-y-6 card-hover">
-            <div class="space-y-2">
-                <div class="flex items-center justify-center space-x-3">
-                    <h2 class="text-3xl font-semibold text-white" data-testid="text-launch-title">Launch Now</h2>
-                    <span class="bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-bold py-1 px-3 rounded-full" data-testid="badge-working-status">
-                        Working!
-                    </span>
-                </div>
-                <p class="text-gray-400" data-testid="text-launch-description">Copy the script to ignite H4X Scripts</p>
-            </div>
-            <div class="script-box">
-                <div class="flex items-center justify-between text-gray-300 text-sm mb-4">
-                    <div class="flex items-center space-x-2">
-                        <span class="w-2 h-2 rounded-full animate-pulse bg-[#5bff00]" data-testid="status-script-indicator"></span>
-                        <span data-testid="text-script-filename">loader.lua</span>
-                        <span class="text-purple-400 font-semibold" data-testid="text-script-status">Active</span>
-                    </div>
-                </div>
-                <div class="relative bg-gray-800 rounded-lg p-2">
-                    <pre class="text-left font-mono text-gray-300 text-sm overflow-x-auto whitespace-pre-wrap break-words">
-<code class="language-lua" id="script-code"> loadstring(game:HttpGet('https://raw.githubusercontent.com/H4xScripts/Loader/main/loader.lua'))()</code></pre>
-                    <button id="copy-script-btn" class="absolute right-2 top-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-2 px-4 rounded-full transition-all duration-200 z-10 font-normal text-[12px] text-justify ml-[9px] mr-[9px] mt-[20px] mb-[20px] pt-[2px] pb-[2px] pl-[10px] pr-[10px]" data-testid="button-copy-script">
-                        Copy
-                    </button>
-                </div>
-            </div>
-            <div class="flex items-center justify-start space-x-2 text-gray-400 text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-                <span data-testid="text-security-notice">Secure Scripts: Every script is checked, encrypted, and safe to use.</span>
-            </div>
-        </div>
-
-        <!-- Access Keys Section -->
-        <div class="bg-gray-900 p-8 rounded-2xl shadow-2xl space-y-8 animate-glow card-hover">
-            <div class="space-y-2">
-                <h2 class="text-3xl font-bold text-center text-white">Access Keys</h2>
-                <p class="text-gray-400">Choose your key or connect with our community</p>
-            </div>
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Linkvertise Card -->
-                <div class="relative bg-gray-800 p-6 rounded-xl card-hover border border-gray-700 hover:border-purple-600 flex flex-col justify-between h-full">
-                    <div class="absolute top-0 right-0 bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-bl-lg">
-                        Recommended
-                    </div>
-                    <div>
-                        <img src="https://ads-preview.linkvertise.com/assets/img/linkvertise_logo_big.svg" alt="Linkvertise Logo" class="h-8 w-auto mx-auto mb-4"/>
-                        <ul class="list-disc list-inside space-y-2 text-gray-400 text-sm text-left">
-                            <li>10-30s</li>
-                            <li>Swift access</li>
-                            <li>24h key duration</li>
-                            <li>2 checkpoints</li>
-                        </ul>
-                    </div>
-                    <div class="mt-6 text-center w-full">
-                        <a href="https://ads.luarmor.net/get_key?for=H4xScript__Linkvertise-fefhrreVBkfh" target="_blank" class="w-full text-white font-bold py-3 px-8 rounded-full button-glow inline-block text-center" style="background: linear-gradient(45deg, #5B21B6, #EC4899);">
-                            Get Key
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Loot Labs Card -->
-                <div class="relative bg-gray-800 p-6 rounded-xl card-hover border border-gray-700 hover:border-pink-600 flex flex-col justify-between h-full">
-                    <div>
-                        <div class="flex items-center justify-center space-x-2 mb-4">
-                            <img src="https://creators.lootlabs.gg/assets/svg/logo.svg" alt="Lootlab Logo" class="h-8 w-auto"/>
-                            <h3 class="text-xl font-semibold text-white">Loot Labs</h3>
-                        </div>
-                        <ul class="list-disc list-inside space-y-2 text-gray-400 text-sm text-left">
-                            <li>1-2min</li>
-                            <li>10h key duration</li>
-                            <li>2 checkpoints</li>
-                        </ul>
-                    </div>
-                    <div class="mt-6 text-center w-full">
-                        <a href="https://ads.luarmor.net/get_key?for=H4xScript__LootLabs-XPiUmMWjiQDU" target="_blank" class="w-full text-white font-bold py-3 px-8 rounded-full button-glow inline-block text-center" style="background: linear-gradient(45deg, #EC4899, #5B21B6);">
-                            Get Key
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Robux Card -->
-                <div class="relative bg-gray-800 p-6 rounded-xl card-hover border border-gray-700 hover:border-yellow-500 flex flex-col justify-between h-full">
-                    <div class="absolute top-0 right-0 bg-yellow-500 text-gray-900 text-xs font-bold px-3 py-1 rounded-bl-lg">
-                        Premium
-                    </div>
-                    <div>
-                        <div class="flex items-center justify-center space-x-2 mb-4">
-                            <img src="https://devforum-uploads.s3.dualstack.us-east-2.amazonaws.com/uploads/original/4X/e/a/9/ea98f8c6c438d2d8136a6751282a153c6b28b892.png" alt="Robux Logo" class="h-8 w-auto"/>
-                            <h3 class="text-xl font-semibold text-white">Robux</h3>
-                        </div>
-                        <ul class="list-disc list-inside space-y-2 text-gray-400 text-sm text-left">
-                            <li>Lifetime key</li>
-                            <li>Instant access</li>
-                            <li>No reset cooldown</li>
-                            <li>Robux payment</li>
-                        </ul>
-                    </div>
-                    <div class="text-center w-full">
-                        <p class="mt-4 text-center text-xl font-bold text-gray-300">800 Robux</p>
-                        <button id="open-modal-btn" class="w-full text-white font-bold py-3 px-8 rounded-full button-glow inline-block text-center" style="background: linear-gradient(45deg, #F59E0B, #DC2626);">
-                            Buy Key
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Community Card -->
-                <div class="relative bg-gray-800 p-6 rounded-xl card-hover border border-gray-700 hover:border-blue-600 lg:col-span-3">
-                    <h3 class="text-2xl font-semibold mb-4 text-center text-blue-400">Join Our Community</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="bg-gray-700 p-4 rounded-xl">
-                            <p class="text-2xl font-bold text-gray-300">173,942</p>
-                            <p class="text-gray-400 text-sm">Total Members</p>
-                        </div>
-                        <div class="bg-gray-700 p-4 rounded-xl">
-                            <p class="text-2xl font-bold text-gray-300">12,492</p>
-                            <p class="text-gray-400 text-sm">Online Now</p>
-                        </div>
-                    </div>
-                    <a href="https://discord.gg/H4xScripts" target="_blank" class="w-full mt-6 inline-flex items-center justify-center space-x-2 button-glow text-white font-medium py-3 px-6 rounded-full" style="background: linear-gradient(45deg, #5B21B6, #3B82F6);">
-                        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968756.png" alt="Discord Logo" class="w-6 h-6"/>
-                        <span>Join Discord Server</span>
-                    </a>
-                </div>
-            </div>
-        </div>
+<body>
+    <div class="notification" id="notification">
+        <div class="checkmark"></div>
+        <span>Key has been copied!</span>
+    </div>
+    
+    <div class="container">
+        <img src="https://yt3.googleusercontent.com/sc9mp1SFwUvGjRtg0AwWsaNBG1pU9j-5671aDTETsLf0TynZ0t9AfqOpq_YdYxpbUI_8EMT-3g=s160-c-k-c0x00ffffff-no-rj" alt="H4xScript" class="logo-img">
+        <div class="logo">H4xScript</div>
+        <div class="key-label">Your Key:</div>
+        <div class="key-display" id="keyDisplay"></div>
+        <button class="copy-btn" onclick="copyKey()">Copy Key</button>
     </div>
 
-    <!-- Robux Verification Modal -->
-    <div id="robux-modal" class="modal-container hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 opacity-0 transition-opacity duration-300">
-        <div class="modal-content p-8 max-w-md w-full relative bg-gray-900 rounded-xl shadow-lg border border-gray-700">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-2xl font-bold text-white">Robux Key Verification</h3>
-                <button id="close-modal-btn" class="text-gray-400 hover:text-white transition-colors p-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18 6L6 18M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Modal Content (to be manipulated by JS) -->
-            <div id="modal-input-state" class="space-y-6">
-                <div class="text-center space-y-2">
-                    <div class="flex items-center justify-center space-x-2 mb-4">
-                        <img src="https://devforum-uploads.s3.dualstack.us-east-2.amazonaws.com/uploads/original/4X/e/a/9/ea98f8c6c438d2d8136a6751282a153c6b28b892.png" alt="Robux Logo" class="h-8 w-auto"/>
-                        <span class="text-xl font-bold text-gray-300">800 Robux</span>
-                    </div>
-                    <p class="text-gray-400 text-sm">
-                        Purchase the gamepass first, then enter your Roblox username to verify and receive your lifetime key.
-                    </p>
-                    <a href="https://www.roblox.com/game-pass/1188304491/800" target="_blank" rel="noopener noreferrer" class="inline-block bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-bold py-2 px-6 rounded-full transition-all">
-                        Buy Gamepass
-                    </a>
-                </div>
-                <div class="space-y-4">
-                    <div>
-                        <label for="robloxUsername" class="block text-sm font-medium text-gray-300 mb-2">
-                            Roblox Username
-                        </label>
-                        <input type="text" id="robloxUsername" placeholder="Enter your Roblox username" class="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"/>
-                    </div>
-                    <button id="verify-btn" class="w-full text-white font-bold py-3 px-6 rounded-full button-glow disabled:opacity-50 transition-all duration-200" style="background: linear-gradient(90deg, #8B5CF6, #EC4899); box-shadow: 0 0 15px rgba(139, 92, 246, 0.5), 0 0 10px rgba(236, 72, 153, 0.5);">
-                        Verify Purchase
-                    </button>
-                </div>
-                <div class="text-xs text-gray-500 text-center space-y-1">
-                    <p>• Make sure you've purchased the gamepass before verifying</p>
-                    <p>• Verification usually takes 5-10 seconds</p>
-                    <p>• Having issues? <a href="https://discord.gg/H4xScripts" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:text-blue-300 underline">Join our Discord</a> for support</p>
-                </div>
-            </div>
-
-            <div id="modal-loading-state" class="hidden space-y-6 text-center">
-                <div class="flex items-center justify-center space-x-3 text-white">
-                    <div class="w-8 h-8 rounded-full border-4 border-t-purple-500 animate-spin"></div>
-                    <span class="text-gray-300">Verifying gamepass purchase...</span>
-                </div>
-                <p class="text-sm text-gray-400">
-                    Checking ownership of gamepass for <span id="loading-username" class="text-purple-400 font-medium"></span>
-                </p>
-            </div>
-
-            <div id="modal-success-state" class="hidden space-y-6">
-                <div class="bg-green-900/50 border border-green-600 p-6 rounded-xl text-center space-y-4">
-                    <div class="flex items-center justify-center space-x-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-400">
-                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14M22 4L12 14.01l-3-3" />
-                        </svg>
-                        <span class="text-xl font-bold text-white">Verification Successful!</span>
-                    </div>
-                    <p class="text-green-200 text-sm">
-                        Gamepass ownership confirmed for <span id="success-username" class="font-medium"></span>
-                    </p>
-                </div>
-                <div class="space-y-3">
-                    <label class="block text-sm font-medium text-gray-300">Your Lifetime Key:</label>
-                    <div class="bg-gray-800 p-4 rounded-lg flex items-center justify-between">
-                        <span id="generated-key" class="text-purple-400 break-all"></span>
-                        <button id="copy-key-btn" class="text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-gray-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2" />
-                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
-                            </svg>
-                        </button>
-                    </div>
-                    <p class="text-xs text-gray-400">
-                        This key is permanently linked to your account and can be used anytime.
-                    </p>
-                </div>
-            </div>
-
-            <div id="modal-error-state" class="hidden space-y-6">
-                <div class="bg-red-900/50 border border-red-600 p-6 rounded-xl text-center space-y-4">
-                    <div class="flex items-center justify-center space-x-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <path d="M15 9l-6 6M9 9l6 6" />
-                        </svg>
-                        <span class="text-xl font-bold text-white">Verification Failed</span>
-                    </div>
-                    <div class="text-red-200 text-sm space-y-2">
-                        <p>Couldn't verify gamepass purchase for <span id="error-username" class="font-medium"></span></p>
-                        <p id="error-message" class="text-xs"></p>
-                    </div>
-                </div>
-                <div class="space-y-4">
-                    <div class="flex justify-center space-x-4">
-                        <button id="retry-btn" class="text-purple-400 hover:text-purple-300 text-sm font-medium transition-colors">
-                            Try Again
-                        </button>
-                        <span class="text-gray-600">|</span>
-                        <button id="discord-btn" class="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors">
-                            Join Discord
-                        </button>
-                    </div>
-                    <p class="text-sm text-gray-400 text-center">Don't worry, you haven't been scammed. Join our Discord and send proof of purchase; our staff will be happy to assist. Sorry for the inconvenience.</p>
-                </div>
-            </div>
-
-            <div id="modal-existing-state" class="hidden space-y-6">
-                <div class="bg-blue-900/50 border border-blue-600 p-6 rounded-xl text-center space-y-4">
-                    <div class="flex items-center justify-center space-x-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <path d="M12 16v-4M12 8h.01" />
-                        </svg>
-                        <span class="text-xl font-bold text-white">Already Verified</span>
-                    </div>
-                    <p class="text-blue-200 text-sm">
-                        Account <span id="existing-username" class="font-medium"></span> is already verified with an existing key.
-                    </p>
-                </div>
-                <div class="space-y-3">
-                    <label class="block text-sm font-medium text-gray-300">Your Existing Key:</label>
-                    <div class="bg-gray-800 p-4 rounded-lg flex items-center justify-between">
-                        <span id="existing-key" class="text-purple-400 break-all"></span>
-                        <button id="copy-existing-key-btn" class="text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-gray-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2" />
-                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1" />
-                            </svg>
-                        </button>
-                    </div>
-                    <p class="text-xs text-gray-400">
-                        You can only have one lifetime key per account.
-                    </p>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- Toast Component -->
-    <div id="toast-container" class="fixed bottom-4 right-4 z-[60] opacity-0 transition-opacity duration-300 pointer-events-none"></div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Global variables provided by the environment
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        // Firebase Initialization
-        let db, auth, userId;
-        async function initializeFirebase() {
-            try {
-                const app = initializeApp(firebaseConfig);
-                auth = getAuth(app);
-                db = getFirestore(app);
-
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
+    <script>
+        function generateKey() {
+            const upper = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const lower = 'abcdefghijklmnopqrstuvwxyz';
+            const nums = '0123456789';
+            const allChars = lower + nums;
+            
+            let key = upper.charAt(Math.floor(Math.random() * upper.length));
+            
+            const capitalPositions = new Set();
+            while (capitalPositions.size < 3) {
+                const pos = Math.floor(Math.random() * 15) + 1;
+                capitalPositions.add(pos);
+            }
+            
+            for (let i = 1; i < 16; i++) {
+                if (capitalPositions.has(i)) {
+                    key += upper.charAt(Math.floor(Math.random() * upper.length));
                 } else {
-                    await signInAnonymously(auth);
+                    key += allChars.charAt(Math.floor(Math.random() * allChars.length));
                 }
-                userId = auth.currentUser?.uid || crypto.randomUUID();
-                console.log("Firebase initialized and user authenticated:", userId);
-            } catch (error) {
-                console.error("Firebase initialization failed:", error);
             }
+            return key;
         }
 
-        // Simple Toast Functionality
-        const toastContainer = document.getElementById('toast-container');
-        function showToast(title, description, isError = false) {
-            toastContainer.innerHTML = `
-                <div class="p-4 rounded-lg shadow-lg text-white ${isError ? 'bg-red-500' : 'bg-gray-800'}">
-                    <div class="font-bold">${title}</div>
-                    <div>${description}</div>
-                </div>
-            `;
-            toastContainer.style.opacity = '1';
-            toastContainer.style.pointerEvents = 'auto';
+        const key = generateKey();
+        document.getElementById('keyDisplay').textContent = key;
 
-            setTimeout(() => {
-                toastContainer.style.opacity = '0';
-                toastContainer.style.pointerEvents = 'none';
-            }, 3000);
+        function copyKey() {
+            navigator.clipboard.writeText(key).then(() => {
+                const notification = document.getElementById('notification');
+                notification.classList.add('show');
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            });
         }
-
-        // Modal State Management
-        const modal = document.getElementById('robux-modal');
-        const states = {
-            input: document.getElementById('modal-input-state'),
-            loading: document.getElementById('modal-loading-state'),
-            success: document.getElementById('modal-success-state'),
-            error: document.getElementById('modal-error-state'),
-            existing: document.getElementById('modal-existing-state'),
-        };
-        const robloxUsernameInput = document.getElementById('robloxUsername');
-        const loadingUsernameSpan = document.getElementById('loading-username');
-        const successUsernameSpan = document.getElementById('success-username');
-        const errorUsernameSpan = document.getElementById('error-username');
-        const existingUsernameSpan = document.getElementById('existing-username');
-        const generatedKeySpan = document.getElementById('generated-key');
-        const existingKeySpan = document.getElementById('existing-key');
-        const errorMessageDiv = document.getElementById('error-message');
-        const verifyBtn = document.getElementById('verify-btn');
-        const copyScriptBtn = document.getElementById('copy-script-btn');
-        const scriptCodeElement = document.getElementById('script-code');
-
-        function setModalState(state) {
-            Object.values(states).forEach(el => el.classList.add('hidden'));
-            if (states[state]) {
-                states[state].classList.remove('hidden');
-            }
-        }
-
-        function openModal() {
-            modal.classList.remove('hidden');
-            setTimeout(() => modal.style.opacity = '1', 10);
-            setModalState('input');
-        }
-
-        function closeModal() {
-            modal.style.opacity = '0';
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                robloxUsernameInput.value = '';
-                // Reset to input state when closing
-                setModalState('input');
-            }, 300);
-        }
-
-        // Event Listeners
-        document.getElementById('open-modal-btn').addEventListener('click', openModal);
-        document.getElementById('close-modal-btn').addEventListener('click', closeModal);
-
-        verifyBtn.addEventListener('click', async () => {
-            const username = robloxUsernameInput.value.trim();
-            if (!username) {
-                showToast("Username required", "Please enter your Roblox username", true);
-                return;
-            }
-
-            setModalState('loading');
-            loadingUsernameSpan.textContent = username;
-
-            // Simulate loading
-            await new Promise(resolve => setTimeout(resolve, 1500));
-
-            // Hardcoded error state as per the original component's logic
-            errorMessageDiv.textContent = "This is broken. Please join Discord and show a screenshot of proof of your purchase in a ticket. You will receive your key ASAP.";
-            errorUsernameSpan.textContent = username;
-            setModalState('error');
-        });
-
-        document.getElementById('retry-btn').addEventListener('click', () => {
-            setModalState('input');
-        });
-
-        document.getElementById('discord-btn').addEventListener('click', () => {
-            window.open('https://discord.gg/H4xScripts', '_blank');
-        });
-
-        copyScriptBtn.addEventListener('click', async () => {
-            try {
-                const textToCopy = scriptCodeElement.textContent.trim();
-                await navigator.clipboard.writeText(textToCopy);
-                showToast("Copied!", "Script copied to clipboard");
-            } catch (err) {
-                console.error("Copy failed:", err);
-                showToast("Copy failed", "Please try again", true);
-            }
-        });
-
-        // Window load
-        window.addEventListener('load', () => {
-            initializeFirebase();
-        });
     </script>
+</body>
+</html>
